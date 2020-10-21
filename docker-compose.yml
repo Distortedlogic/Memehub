@@ -7,13 +7,11 @@ services:
   #     command: /bin/sh -c "ngrok authtoken ${ngrok_auth} && ngrok http backend:5000 -hostname=react.memehub.lol --log stdout"
   frontend:
     build:
-      context: ./web/frontend
-      args:
-        FONT_AWESOME_TOKEN: ${FONT_AWESOME_TOKEN}
+      context: ./frontend
     container_name: mmc
     restart: unless-stopped
     volumes:
-      - ./web/frontend:/app
+      - ./frontend:/app
     environment:
       - NODE_ENV=development
     ports:
@@ -23,11 +21,11 @@ services:
   backend:
     build:
       dockerfile: Dockerfile.dev
-      context: ./web/backend
+      context: ./backend
     container_name: backend
     restart: unless-stopped
     volumes:
-      - ./web/backend:/app
+      - ./backend:/app
     ports:
       - 5000:5000
   stonk-data:
