@@ -1,0 +1,138 @@
+version: "3.7"
+services:
+  # ngrok:
+  #     build: ./ngrok
+  #     container_name: ngrok
+  #     restart: unless-stopped
+  #     command: /bin/sh -c "ngrok authtoken ${ngrok_auth} && ngrok http backend:5000 -hostname=react.memehub.lol --log stdout"
+  frontend:
+    build:
+      context: ./web/frontend
+      args:
+        FONT_AWESOME_TOKEN: ${FONT_AWESOME_TOKEN}
+    container_name: mmc
+    restart: unless-stopped
+    volumes:
+      - ./web/frontend:/app
+    environment:
+      - NODE_ENV=development
+    ports:
+      - 3000:3000
+    stdin_open: true
+
+  backend:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./web/backend
+    container_name: backend
+    restart: unless-stopped
+    volumes:
+      - ./web/backend:/app
+    ports:
+      - 5000:5000
+  stonk-data:
+    image: postgres:latest
+    container_name: sitedata
+    restart: unless-stopped
+    volumes:
+      - ./backups:/backups
+      - sitedata:/var/lib/postgresql/data
+    env_file:
+      - ./.env
+    ports:
+      - 2345:5432
+  meme-data:
+    image: postgres:latest
+    container_name: memedata
+    restart: unless-stopped
+    volumes:
+      - ./backups:/backups
+      - memedata:/var/lib/postgresql/data
+    env_file:
+      - ./.env
+    ports:
+      - 5432:5432
+  redis:
+    build: ./redis
+    container_name: redis
+    restart: unless-stopped
+    volumes:
+      - redis:/data
+    ports:
+      - 6379:6379
+  redis-commander:
+    container_name: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: unless-stopped
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+
+  controllers:
+    build: ./controllers
+    image: controllers-image:1.0.0
+    container_name: controllers
+    # command: bash -c 'sleep 1 && flask db upgrade && gunicorn -c "python:config.gunicorn" --reload "controller:APP"'
+    command: gunicorn -c "python:config.gunicorn" --reload "controller:APP"
+    restart: unless-stopped
+    volumes:
+      - ./controllers:/app
+    env_file:
+      - ./.env
+    ports:
+      - 8000:8000
+  controller-tasks:
+    image: controllers-image:1.0.0
+    depends_on:
+      - controllers
+    container_name: controller-tasks
+    command: celery worker -B -l info -A controller.CELERY
+    restart: unless-stopped
+    volumes:
+      - ./controllers:/app
+    env_file:
+      - ./.env
+  # model-server:
+  #     build: ./models
+  #     container_name: model_server
+  #     command: gunicorn -c "python:config.gunicorn" --reload "server:APP"
+  #     restart: unless-stopped
+  #     volumes:
+  #         - ./models:/app
+  #     env_file:
+  #         - ./environments/flask.env
+  #         - ./environments/postgres.env
+  #     ports:
+  #         - 8080:8080
+  # notebook-server:
+  #     build: .
+  #     container_name: notebook_server
+  #     restart: unless-stopped
+  #     command: jupyter lab
+  #     volumes:
+  #         - ./notebooks:/notebooks
+  #     env_file:
+  #         - ./.env
+  #     ports:
+  #         - 8888:8888
+  # task-monitor:
+  #     image: controllers-image:1.0.0
+  #     depends_on:
+  #         - controllers
+  #     container_name: task_monitor
+  #     entrypoint: flower
+  #     command: -A controller.CELERY
+  #     restart: unless-stopped
+  #     volumes:
+  #         - ./controllers:/app
+  #     env_file:
+  #         - ./environments/flask.env
+  #         - ./environments/scrapers.env
+  #         - ./environments/postgres.env
+  #     ports:
+  #         - 5555:5555
+volumes:
+  memedata:
+  sitedata:
+  redis:
