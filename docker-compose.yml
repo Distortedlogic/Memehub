@@ -76,8 +76,6 @@ services:
     restart: unless-stopped
     volumes:
       - ./controllers:/app
-    env_file:
-      - ./.env
     ports:
       - 8000:8000
   controller-tasks:
