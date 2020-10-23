@@ -39,9 +39,7 @@ services:
   backend:
     networks:
       - traefik
-      - memehub
-    expose:
-      - 5000
+      - backend
     labels:
         - com.docker.stack.namespace=memehub
         - traefik.frontend.passHostHeader=true
@@ -62,10 +60,8 @@ services:
   sitedata:
     volumes:
       - sitedata:/var/lib/postgresql/data
-    expose:
-      - 5432
     networks:
-      - memehub
+      - backend
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
@@ -80,10 +76,8 @@ services:
   redis:
     volumes:
       - redis:/data
-    expose:
-      - 6379
     networks:
-      - memehub
+      - backend
     deploy:
       replicas: 2
       update_config:
@@ -94,7 +88,7 @@ services:
   controllers:
     command: celery worker -B -l info -A controller.CELERY
     networks:
-      - memehub
+      - backend
     deploy:
       replicas: 2
       update_config:
@@ -106,8 +100,11 @@ volumes:
   sitedata:
   redis:
 networks:
-  memehub:
+  backend:
     driver: overlay
     attachable: true
+    external: true
   traefik:
+    driver: overlay
+    attachable: true
     external: true
