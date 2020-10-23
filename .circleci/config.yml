@@ -37,7 +37,7 @@ jobs:
             --build-arg POSTGRES_PASSWORD=$POSTGRES_PASSWORD
             --build-arg POSTGRES_PASSWORD=$POSTGRES_PASSWORD
             -t distortedlogic/postgres:latest
-            -f Dockerfile.prod
+            -f postgres/Dockerfile.prod
             ./postgres
       - run:
           name: Push Postgres Image
