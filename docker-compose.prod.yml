@@ -103,8 +103,5 @@ networks:
   backend:
     driver: overlay
     attachable: true
-    external: true
   traefik:
-    driver: overlay
-    attachable: true
     external: true
