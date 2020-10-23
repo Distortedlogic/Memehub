@@ -34,7 +34,7 @@ services:
         delay: 10s
       restart_policy:
         condition: on-failure
-  controller-tasks:
+  controllers:
     command: celery worker -B -l info -A controller.CELERY
     deploy:
       replicas: 2
