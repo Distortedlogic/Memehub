@@ -19,13 +19,13 @@ jobs:
             mv /tmp/docker/* /usr/bin
       - run:
           name: Build Nginx Docker Image
-          command: docker build -f nginx/Dockerfile -t distortedlogic/nginx:latest
+          command: docker build -t distortedlogic/nginx:latest ./nginx
       - run:
           name: Push Nginx Image
           command: docker push distortedlogic/nginx:latest
       - run:
           name: Build Redis Docker Image
-          command: docker build -f redis/Dockerfile -t distortedlogic/redis:latest
+          command: docker build -t distortedlogic/redis:latest ./redis
       - run:
           name: Push Redis Image
           command: docker push distortedlogic/redis:latest
