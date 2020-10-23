@@ -1,0 +1,50 @@
+version: "3.7"
+services:
+  backend:
+    ports:
+      - 5000:5000
+    networks:
+      - backend
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+  sitedata:
+    volumes:
+      - sitedata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+  redis:
+    volumes:
+      - redis:/data
+    ports:
+      - 6379:6379
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+  controller-tasks:
+    command: celery worker -B -l info -A controller.CELERY
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+volumes:
+  sitedata:
+  redis:
