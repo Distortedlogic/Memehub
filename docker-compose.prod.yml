@@ -40,6 +40,8 @@ services:
     networks:
       - traefik
       - backend
+    ports:
+      - 5000:5000
     labels:
         - com.docker.stack.namespace=memehub
         - traefik.frontend.passHostHeader=true
