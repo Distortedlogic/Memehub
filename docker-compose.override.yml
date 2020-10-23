@@ -30,17 +30,20 @@ services:
       dockerfile: Dockerfile.dev
       context: ./backend
     restart: on-failure
+    env_file:
+      - ./shared.env
     volumes:
       - ./backend:/app
     ports:
       - 5000:5000
   sitedata:
     restart: on-failure
+    build: ./postgres
     volumes:
       - ./backups:/backups
       - sitedata:/var/lib/postgresql/data
     env_file:
-      - ./.env
+      - ./shared.env
     ports:
       - 5432:5432
   redis:
@@ -67,6 +70,8 @@ services:
       - sitedata
       - redis
     container_name: controllers
+    env_file:
+      - ./shared.env
     restart: on-failure
     command: gunicorn -c "python:config.gunicorn" --reload "controller:APP"
     volumes:
@@ -74,16 +79,17 @@ services:
     ports:
       - 8000:8000
   controller-tasks:
+    container_name: controller-tasks
     depends_on:
       - sitedata
       - redis
     restart: on-failure
     build: ./controllers
     command: celery worker -B -l info -A controller.CELERY
+    env_file:
+      - ./shared.env
     volumes:
       - ./controllers:/app
-    env_file:
-      - ./.env
   # task-monitor:
   #     image: controllers-image:1.0.0
   #     depends_on:

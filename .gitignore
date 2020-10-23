@@ -2,3 +2,4 @@
 /controllers
 /frontend
 .env
+shared.env

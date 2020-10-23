@@ -30,6 +30,18 @@ jobs:
       - run:
           name: Push Redis Image
           command: docker push distortedlogic/redis:latest
+      - run:
+          name: Build Postgres Docker Image
+          command: docker build
+            --build-arg POSTGRES_USER=$POSTGRES_USER
+            --build-arg POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+            --build-arg POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+            -t distortedlogic/postgres:latest
+            -f Dockerfile.prod
+            ./postgres
+      - run:
+          name: Push Postgres Image
+          command: docker push distortedlogic/postgres:latest
       - run: ssh  -o StrictHostKeyChecking=no ubuntu@ec2-3-238-106-37.compute-1.amazonaws.com "cd ~/Memehub && git pull && docker-compose -f docker-compose.yml -f docker-compose.prod.yml config > memehub-compose.yml "
       - run: ssh  -o StrictHostKeyChecking=no ubuntu@ec2-3-238-106-37.compute-1.amazonaws.com "docker-compose -f ~/Memehub/docker-compose.yml -f ~/Memehub/docker-compose.prod.yml config > ~/Memehub/memehub-compose.yml "
       - run: ssh  -o StrictHostKeyChecking=no ubuntu@ec2-3-238-106-37.compute-1.amazonaws.com "docker stack deploy -c ~/Memehub/memehub-compose.yml memehub"
@@ -37,4 +49,6 @@ workflows:
   build-docker-image-only:
     jobs:
       - build-and-deploy:
-          context: dockerhub
+          context:
+            - dockerhub
+            - shared
