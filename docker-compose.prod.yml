@@ -3,8 +3,6 @@ services:
   backend:
     ports:
       - 5000:5000
-    networks:
-      - backend
     deploy:
       replicas: 2
       update_config:
