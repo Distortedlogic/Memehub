@@ -37,11 +37,6 @@ services:
       restart_policy:
         condition: on-failure
   backend:
-    depends_on:
-      sitedata:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
     networks:
       - traefik
       - memehub
@@ -98,11 +93,6 @@ services:
         condition: on-failure
   controllers:
     command: celery worker -B -l info -A controller.CELERY
-    depends_on:
-      sitedata:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
     networks:
       - memehub
     deploy:
