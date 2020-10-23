@@ -4,9 +4,6 @@ services:
     image: distortedlogic/backend:latest
     container_name: backend
     restart: on-failure
-    depends_on:
-      - sitedata
-      - redis
   sitedata:
     image: postgres:latest
     container_name: sitedata
@@ -19,6 +16,3 @@ services:
     image: distortedlogic/controllers:latest
     container_name: controllers
     restart: on-failure
-    depends_on:
-      - sitedata
-      - redis
