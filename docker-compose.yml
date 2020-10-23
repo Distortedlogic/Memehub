@@ -3,16 +3,12 @@ services:
   backend:
     image: distortedlogic/backend:latest
     container_name: backend
-    restart: on-failure
   sitedata:
     image: postgres:latest
     container_name: sitedata
-    restart: on-failure
   redis:
     image: distortedlogic/redis:latest
     container_name: redis
-    restart: on-failure
   controllers:
     image: distortedlogic/controllers:latest
     container_name: controllers
-    restart: on-failure

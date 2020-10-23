@@ -23,14 +23,19 @@ services:
       - 3000:3000
     stdin_open: true
   backend:
+    depends_on:
+      - sitedata
+      - redis
     build:
       dockerfile: Dockerfile.dev
       context: ./backend
+    restart: on-failure
     volumes:
       - ./backend:/app
     ports:
       - 5000:5000
   sitedata:
+    restart: on-failure
     volumes:
       - ./backups:/backups
       - sitedata:/var/lib/postgresql/data
@@ -39,12 +44,14 @@ services:
     ports:
       - 5432:5432
   redis:
+    restart: on-failure
     build: ./redis
     volumes:
       - redis:/data
     ports:
       - 6379:6379
   redis-commander:
+    restart: on-failure
     depends_on:
         - redis
     container_name: redis-commander
@@ -67,6 +74,10 @@ services:
     ports:
       - 8000:8000
   controller-tasks:
+    depends_on:
+      - sitedata
+      - redis
+    restart: on-failure
     build: ./controllers
     command: celery worker -B -l info -A controller.CELERY
     volumes:

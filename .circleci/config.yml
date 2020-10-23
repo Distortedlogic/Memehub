@@ -19,11 +19,11 @@ jobs:
             mv /tmp/docker/* /usr/bin
       - run: docker login -u distortedlogic -p $DOCKERHUB_TOKEN
       - run:
-          name: Build Nginx Docker Image
-          command: docker build -t distortedlogic/nginx:latest ./nginx
+          name: Build Traefik Docker Image
+          command: docker build -t distortedlogic/traefik:latest ./traefik
       - run:
-          name: Push Nginx Image
-          command: docker push distortedlogic/nginx:latest
+          name: Push Traefik Image
+          command: docker push distortedlogic/traefik:latest
       - run:
           name: Build Redis Docker Image
           command: docker build -t distortedlogic/redis:latest ./redis
