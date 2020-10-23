@@ -30,7 +30,7 @@ jobs:
       - run:
           name: Push Redis Image
           command: docker push distortedlogic/redis:latest
-      - run: ssh  -o StrictHostKeyChecking=no ubuntu@ec2-3-238-106-37.compute-1.amazonaws.com \"cd ~/Memehub && git pull && docker stack deploy -c docker-compose.prod.yml memehub\"
+      - run: ssh  -o StrictHostKeyChecking=no ubuntu@ec2-3-238-106-37.compute-1.amazonaws.com "cd ~/Memehub && git pull && docker stack deploy -c docker-compose.prod.yml memehub"
 workflows:
   build-docker-image-only:
     jobs:
