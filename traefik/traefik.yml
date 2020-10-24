@@ -45,7 +45,6 @@ certificatesResolvers:
 middlewares:
   cors:
     headers:
-      sslRedirect: true
       accessControlMaxAge: 12
       addVaryHeader: true
       Access-Control-Allow-Credentials: true
