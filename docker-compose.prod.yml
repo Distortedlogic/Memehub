@@ -55,6 +55,8 @@ services:
       restart_policy:
         condition: on-failure
   sitedata:
+    tmpfs:
+      - /run
     volumes:
       - sitedata:/var/lib/postgresql/data
     networks:
