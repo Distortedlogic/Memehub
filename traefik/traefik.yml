@@ -57,5 +57,7 @@ middlewares:
         - DELETE
       accessControlAllowHeaders:
         - "*"
+      accessControlAllowOrigin:
+        - https://memehub.lol
       accessControlAllowOriginList:
         - https://memehub.lol
