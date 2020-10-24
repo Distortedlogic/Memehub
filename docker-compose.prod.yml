@@ -24,6 +24,15 @@ services:
         - traefik.http.routers.dashboard.tls=true
         - traefik.http.routers.dashboard.tls.certresolver=letsencrypt
         - traefik.enable=true
+        - traefik.http.services.backend.loadbalancer.passhostheader=true
+        - "traefik.http.middlewares.backend.headers.accesscontrolmaxage=100"
+        - "traefik.http.middlewares.backend.headers.addvaryheader=true"
+        - traefik.http.middlewares.backend.headers.accesscontrolalloworigin=*
+        - traefik.http.middlewares.backend.headers.accesscontrolallowcredentials=true
+        - traefik.http.middlewares.backend.headers.accesscontrolallowheaders=Authorization,Origin,Content-Type,Accept
+        - traefik.http.middlewares.backend.headers.accesscontrolallowmethods=GET,POST,PUT,PATCH,DELETE,OPTIONS
+        - traefik.http.middlewares.backend.headers.customresponseheaders.Access-Control-Allow-Headers=Authorization,Origin,Content-Type,Accept
+        - traefik.http.middlewares.backend.headers.customresponseheaders.Access-Control-Allow-Methods=GET,POST,PUT,PATCH,DELETE,OPTIONS
       restart_policy:
         condition: on-failure
   backend:
@@ -42,14 +51,6 @@ services:
         - traefik.http.services.backend.loadbalancer.server.scheme=https
         - traefik.http.services.backend.loadbalancer.passhostheader=true
         - traefik.http.routers.backend.tls.certresolver=letsencrypt
-        - "traefik.http.middlewares.backend.headers.accesscontrolmaxage=100"
-        - "traefik.http.middlewares.backend.headers.addvaryheader=true"
-        - traefik.http.middlewares.backend.headers.accesscontrolalloworigin=*
-        - traefik.http.middlewares.backend.headers.accesscontrolallowcredentials=true
-        - traefik.http.middlewares.backend.headers.accesscontrolallowheaders=Authorization,Origin,Content-Type,Accept
-        - traefik.http.middlewares.backend.headers.accesscontrolallowmethods=GET,POST,PUT,PATCH,DELETE,OPTIONS
-        - traefik.http.middlewares.backend.headers.customresponseheaders.Access-Control-Allow-Headers=Authorization,Origin,Content-Type,Accept
-        - traefik.http.middlewares.backend.headers.customresponseheaders.Access-Control-Allow-Methods=GET,POST,PUT,PATCH,DELETE,OPTIONS
       replicas: 2
       update_config:
         parallelism: 2
