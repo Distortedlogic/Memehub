@@ -17,7 +17,7 @@ services:
         parallelism: 1
         delay: 10s
       labels:
-        - traefik.http.routers.dashboard.rule=Host(`traefik.backend.memehub.lol`)
+        - traefik.http.routers.dashboard.rule=Host(`backend.memehub.lol`) && (PathPrefix(`/api`)
         - traefik.http.routers.dashboard.service=api@internal
         - traefik.http.services.backend.loadbalancer.server.port=8080
         - traefik.http.routers.backend.tls.certresolver=letsencrypt
