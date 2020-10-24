@@ -24,7 +24,6 @@ providers:
   providersThrottleDuration: 10
   docker:
     exposedByDefault: false
-    endpoint: tcp://127.0.0.1:2375
     network: web
     swarmMode: true
     swarmModeRefreshSeconds: 30
