@@ -34,11 +34,12 @@ certificatesResolvers:
   letsencrypt:
     acme:
       email: jermeek@gmail.com
-      caServer: https://acme-v02.api.letsencrypt.org/directory
       storage: /etc/traefik/acme/acme.json
-      dnsChallenge:
-        provider: digitalocean
-        delayBeforeCheck: 120
-        resolvers:
-          - 1.1.1.1:53
-          - 8.8.8.8:53
+      httpChallenge:
+        entryPoint: web
+      # dnsChallenge:
+      #   provider: digitalocean
+      #   delayBeforeCheck: 120
+      #   resolvers:
+      #     - 1.1.1.1:53
+      #     - 8.8.8.8:53
