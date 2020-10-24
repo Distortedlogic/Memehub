@@ -1,5 +1,8 @@
 version: "3.7"
 services:
+  traefik:
+    image: distortedlogic/traefik:latest
+    container_name: traefik
   backend:
     image: distortedlogic/backend:latest
     container_name: backend

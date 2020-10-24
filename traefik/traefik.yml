@@ -17,7 +17,7 @@ entryPoints:
     address: :443
     http:
       tls:
-        certResolver: myresolver
+        certResolver: letsencrypt
 providers:
   providersThrottleDuration: 10
   docker:
@@ -28,9 +28,10 @@ providers:
     swarmModeRefreshSeconds: 30
     defaultRule: Host(`backend.memehub.lol`)
 certificatesResolvers:
-  myresolver:
+  letsencrypt:
     acme:
       email: jermeek@gmail.com
+      caServer: https://acme-v02.api.letsencrypt.org/directory
       storage: /etc/traefik/acme/acme.json
       dnsChallenge:
         provider: namecheap
