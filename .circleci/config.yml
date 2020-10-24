@@ -38,7 +38,7 @@ jobs:
           command: docker build
             --build-arg POSTGRES_USER=$POSTGRES_USER
             --build-arg POSTGRES_PASSWORD=$POSTGRES_PASSWORD
-            --build-arg POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+            --build-arg POSTGRES_DB=$POSTGRES_DB
             -t distortedlogic/postgres:latest
             -f postgres/Dockerfile.prod
             ./postgres
