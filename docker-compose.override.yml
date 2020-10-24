@@ -10,19 +10,23 @@ services:
   #     - 80:80
   #     - 443:443
   traefik:
-    build:
-      context: ./traefik
+    build: ./traefik
     command: --configFile=/etc/traefik/traefik.yml
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/traefik.yml:/etc/traefik/traefik.yml
+      - ./traefik/acme.json:/etc/traefik/acme/acme.json
     ports:
       - 80:80
       - 443:443
       - 8080:8080
     labels:
-      - traefik.http.routers.dashboard.rule=Host(`backend.memehub.lol`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+      - traefik.http.routers.dashboard.rule=Host(`backend.memehub.lol`) && PathPrefix(`/traefik`)
       - traefik.http.routers.dashboard.service=api@internal
+      - traefik.http.routers.dashboard.entrypoints=secure
+      - traefik.http.services.dashboard.loadbalancer.server.port=8080
+      - traefik.http.routers.dashboard.tls=true
+      - traefik.http.routers.dashboard.tls.certresolver=letsencrypt
       - traefik.enable=true
   # ngrok:
   #     build: ./ngrok
