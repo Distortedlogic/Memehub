@@ -33,7 +33,7 @@ certificatesResolvers:
   letsencrypt:
     acme:
       email: jermeek@gmail.com
-      storage: /etc/traefik/acme/acme.json
+      storage: acme.json
       # caServer: https://acme-staging-v02.api.letsencrypt.org/directory
       tlsChallenge: {}
       httpChallenge:
