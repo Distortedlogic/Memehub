@@ -2,31 +2,15 @@ version: "3.7"
 services:
   traefik:
     image: distortedlogic/traefik:latest
-    command:
-      - "--web"
-      - "--entrypoints=Name:http Address::80 Redirect.EntryPoint:https"
-      - "--entrypoints=Name:https Address::443 TLS"
-      - "--defaultEntryPoints=http,https"
-      - "--acme"
-      - "--acme.storage=/etc/traefik/acme/acme.json"
-      - "--acme.entryPoint=https"
-      - "--acme.httpChallenge.entryPoint=http"
-      - "--acme.onHostRule=true"
-      - "--acme.onDemand=false"
-      - "--acme.email=jermeek@gmail.com"
-      - "--docker"
-      - "--docker.swarmMode"
-      - "--docker.domain=tk"
-      - "--docker.watch"
-      - "--logLevel=DEBUG"
     volumes:
+      - ./letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.yml:/etc/traefik/traefik.yml
     networks:
-      - traefik
+      - web
     ports:
       - 80:80
       - 443:443
-      - 8080:8080
     deploy:
       mode: global
       update_config:
@@ -38,21 +22,16 @@ services:
         condition: on-failure
   backend:
     networks:
-      - traefik
-      - backend
-    ports:
-      - 5000:5000
-    labels:
-        - com.docker.stack.namespace=memehub
-        - traefik.frontend.passHostHeader=true
-        - traefik.backend.loadbalancer.swarm=true
-        - traefik.backend=backend
-        - traefik.port=5000
-        - traefik.frontend.rule=Host:memehub.lol
-        - traefik.docker.network=traefik
-        - traefik.frontend.entryPoints=http,https
-        - traefik.enable=true
+      - web
+      - memehub_backend
     deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.backend-web.rule=Host(`backend.memehub.lol`)
+        - traefik.http.routers.backend-web.entrypoints=web
+        - traefik.http.routers.backend-secured.rule=Host(`backend.memehub.lol`)
+        - traefik.http.routers.backend-secured.entrypoints=websecured
+        - traefik.http.services.backend.loadbalancer.server.port=5000
       replicas: 2
       update_config:
         parallelism: 2
@@ -63,7 +42,7 @@ services:
     volumes:
       - sitedata:/var/lib/postgresql/data
     networks:
-      - backend
+      - memehub_backend
     deploy:
       replicas: 2
       update_config:
@@ -75,7 +54,7 @@ services:
     volumes:
       - redis:/data
     networks:
-      - backend
+      - memehub_backend
     deploy:
       replicas: 2
       update_config:
@@ -86,7 +65,7 @@ services:
   controllers:
     command: celery worker -B -l info -A controller.CELERY
     networks:
-      - backend
+      - memehub_backend
     deploy:
       replicas: 2
       update_config:
@@ -98,8 +77,8 @@ volumes:
   sitedata:
   redis:
 networks:
-  backend:
+  memehub_backend:
     driver: overlay
     attachable: true
-  traefik:
+  web:
     external: true

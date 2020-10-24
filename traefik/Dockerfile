@@ -1,4 +1,4 @@
-FROM traefik:alpine
+FROM traefik:latest
 
 RUN mkdir -pv /etc/traefik/acme && \
   touch /etc/traefik/acme/acme.json && \
