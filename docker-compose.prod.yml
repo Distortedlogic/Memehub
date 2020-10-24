@@ -33,7 +33,7 @@ services:
     deploy:
       labels:
         - traefik.enable=true
-        - traefik.http.routers.backend.rule=Host(`backend.memehub.lol`) && PathPrefix(`/graphql`) || Host(`test.memehub.lol`)
+        - traefik.http.routers.backend.rule=Host(`backend.memehub.lol`) && PathPrefix(`/graphql`)
         - traefik.http.routers.backend.entrypoints=secure
         - traefik.http.routers.backend.tls=true
         - traefik.http.services.backend.loadbalancer.server.port=5000
