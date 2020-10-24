@@ -20,7 +20,10 @@ jobs:
       - run: docker login -u distortedlogic -p $DOCKERHUB_TOKEN
       - run:
           name: Build Traefik Docker Image
-          command: docker build -t distortedlogic/traefik:latest ./traefik
+          command: docker build
+            --build-arg DO_AUTH_TOKEN=$DO_AUTH_TOKEN
+            -t distortedlogic/traefik:latest
+            ./traefik
       - run:
           name: Push Traefik Image
           command: docker push distortedlogic/traefik:latest
@@ -51,4 +54,5 @@ workflows:
       - build-and-deploy:
           context:
             - dockerhub
+            - traefik
             - shared
