@@ -5,6 +5,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/traefik.yml:/etc/traefik/traefik.yml
+      - letsencrypt:/etc/traefik/acme/acme.json
     networks:
       - web
     ports:
@@ -17,12 +18,12 @@ services:
         parallelism: 1
         delay: 10s
       labels:
-        - traefik.http.routers.dashboard.rule=Host(`backend.memehub.lol`) && PathPrefix(`/traefik`)
-        - traefik.http.routers.dashboard.service=api@internal
-        - traefik.http.routers.dashboard.entrypoints=secure
-        - traefik.http.services.dashboard.loadbalancer.server.port=8080
-        - traefik.http.routers.dashboard.tls=true
-        - traefik.http.routers.dashboard.tls.certresolver=letsencrypt
+        # - traefik.http.routers.dashboard.rule=Host(`backend.memehub.lol`) && PathPrefix(`/traefik`)
+        # - traefik.http.routers.dashboard.service=api@internal
+        # - traefik.http.routers.dashboard.entrypoints=secure
+        # - traefik.http.services.dashboard.loadbalancer.server.port=8080
+        # - traefik.http.routers.dashboard.tls=true
+        # - traefik.http.routers.dashboard.tls.certresolver=letsencrypt
         - traefik.enable=true
       restart_policy:
         condition: on-failure
@@ -33,7 +34,7 @@ services:
     deploy:
       labels:
         - traefik.enable=true
-        - traefik.http.routers.backend.rule=Host(`backend.memehub.lol`) && PathPrefix(`/graphql`)
+        - traefik.http.routers.backend.rule=Host(`backend.memehub.lol`) && PathPrefix(`/graphql`) || Host(`api.memehub.lol`)
         - traefik.http.routers.backend.entrypoints=secure
         - traefik.http.routers.backend.tls=true
         - traefik.http.services.backend.loadbalancer.server.port=5000
@@ -83,6 +84,7 @@ services:
 volumes:
   sitedata:
   redis:
+  letsencrypt:
 networks:
   backend:
     driver: overlay

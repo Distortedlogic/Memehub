@@ -1,21 +1,11 @@
 version: "3.7"
 services:
-  # traefik:
-  #   build:
-  #     context: ./traefik
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #     - ./traefik/traefik.yml:/etc/traefik/traefik.yml
-  #   ports:
-  #     - 80:80
-  #     - 443:443
   traefik:
     build: ./traefik
     command: --configFile=/etc/traefik/traefik.yml
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/traefik.yml:/etc/traefik/traefik.yml
-      - ./traefik/acme.json:/etc/traefik/acme/acme.json
     ports:
       - 80:80
       - 443:443
@@ -112,7 +102,13 @@ services:
       - sitedata
       - redis
     restart: on-failure
-    build: ./controllers
+    build:
+      context: ./controllers
+      # dockerfile: Dockerfile.prod
+      # args:
+      #   POSTGRES_USER: postgres
+      #   POSTGRES_DB: postgres
+      #   POSTGRES_PASSWORD: postgres
     command: celery worker -B -l info -A controller.CELERY
     env_file:
       - ./shared.env
@@ -128,10 +124,6 @@ services:
   #     restart: on-failure
   #     volumes:
   #         - ./controllers:/app
-  #     env_file:
-  #         - ./environments/flask.env
-  #         - ./environments/scrapers.env
-  #         - ./environments/postgres.env
   #     ports:
   #         - 5555:5555
 volumes:
