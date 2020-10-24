@@ -36,7 +36,7 @@ certificatesResolvers:
       caServer: https://acme-v02.api.letsencrypt.org/directory
       storage: /etc/traefik/acme/acme.json
       dnsChallenge:
-        provider: namecheap
+        provider: digitalocean
         delayBeforeCheck: 120
         resolvers:
           - 1.1.1.1:53
