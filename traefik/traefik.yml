@@ -2,9 +2,9 @@ log:
   level: DEBUG
   filepath: /etc/traefik/log/traefik.log
 api:
-  dashboard: false
-  insecure: false  
-  debug: false
+  dashboard: true
+  insecure: true  
+  debug: true
 entryPoints:
   web:
     address: :80
