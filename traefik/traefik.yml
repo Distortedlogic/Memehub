@@ -48,16 +48,14 @@ middlewares:
       sslRedirect: true
       accessControlMaxAge: 12
       addVaryHeader: true
-      accessControlAllowCredentials: true
-      accessControlAllowMethods:
+      Access-Control-Allow-Credentials: true
+      Access-Control-Allow-Methods:
         - OPTION
         - POST
         - GET
         - PUT
         - DELETE
-      accessControlAllowHeaders:
+      Access-Control-Allow-Headers:
         - "*"
-      accessControlAllowOrigin:
-        - https://memehub.lol
-      accessControlAllowOriginList:
+      Access-Control-Allow-Origin:
         - https://memehub.lol
