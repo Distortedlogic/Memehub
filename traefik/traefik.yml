@@ -18,6 +18,8 @@ entryPoints:
     http:
       tls:
         certResolver: letsencrypt
+serversTransport:
+  insecureSkipVerify: true
 providers:
   providersThrottleDuration: 10
   docker:
