@@ -17,7 +17,7 @@ services:
         parallelism: 1
         delay: 10s
       labels:
-        - traefik.http.routers.dashboard.rule=Host(`backend.memehub.lol`) && (PathPrefix(`/api`)
+        - traefik.http.routers.dashboard.rule=Host(`backend.memehub.lol`) && PathPrefix(`/traefik`)
         - traefik.http.routers.dashboard.service=api@internal
         - traefik.http.services.backend.loadbalancer.server.port=8080
         - traefik.http.routers.backend.tls.certresolver=letsencrypt
@@ -31,9 +31,9 @@ services:
     deploy:
       labels:
         - traefik.enable=true
-        - traefik.http.routers.backend-web.rule=Host(`backend.memehub.lol`)
+        - traefik.http.routers.backend-web.rule=Host(`backend.memehub.lol`) && PathPrefix(`/graphql`)
         - traefik.http.routers.backend-web.entrypoints=web
-        - traefik.http.routers.backend-secured.rule=Host(`backend.memehub.lol`)
+        - traefik.http.routers.backend-secured.rule=Host(`backend.memehub.lol`) && PathPrefix(`/graphql`)
         - traefik.http.routers.backend-secured.entrypoints=websecured
         - traefik.http.routers.backend.tls=true
         - traefik.http.services.backend.loadbalancer.server.port=5000
