@@ -40,11 +40,16 @@ services:
         - traefik.http.routers.backend.tls=true
         - traefik.http.services.backend.loadbalancer.server.port=5000
         - traefik.http.services.backend.loadbalancer.server.scheme=https
+        - traefik.http.services.backend.loadbalancer.passhostheader=true
         - traefik.http.routers.backend.tls.certresolver=letsencrypt
-        - "traefik.http.middlewares.backend.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
-        - "traefik.http.middlewares.backend.headers.accesscontrolalloworigin=origin-list-or-null"
         - "traefik.http.middlewares.backend.headers.accesscontrolmaxage=100"
         - "traefik.http.middlewares.backend.headers.addvaryheader=true"
+        - traefik.http.middlewares.backend.headers.accesscontrolalloworigin=*
+        - traefik.http.middlewares.backend.headers.accesscontrolallowcredentials=true
+        - traefik.http.middlewares.backend.headers.accesscontrolallowheaders=Authorization,Origin,Content-Type,Accept
+        - traefik.http.middlewares.backend.headers.accesscontrolallowmethods=GET,POST,PUT,PATCH,DELETE,OPTIONS
+        - traefik.http.middlewares.backend.headers.customresponseheaders.Access-Control-Allow-Headers=Authorization,Origin,Content-Type,Accept
+        - traefik.http.middlewares.backend.headers.customresponseheaders.Access-Control-Allow-Methods=GET,POST,PUT,PATCH,DELETE,OPTIONS
       replicas: 2
       update_config:
         parallelism: 2
