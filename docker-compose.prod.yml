@@ -5,7 +5,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/traefik.yml:/etc/traefik/traefik.yml
-      - ./traefik/acme.json:/etc/traefik/acme/acme.json
     networks:
       - web
     ports:
