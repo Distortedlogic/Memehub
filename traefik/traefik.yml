@@ -6,15 +6,15 @@ api:
   insecure: true  
   debug: true
 entryPoints:
-  web:
+  unsecure:
     address: :80
     http:
       redirections:
         entryPoint:
-          to: websecure
+          to: secure
           scheme: https
           permanent: true
-  websecure:
+  secure:
     address: :443
     http:
       tls: {}
@@ -28,7 +28,6 @@ providers:
     network: web
     swarmMode: true
     swarmModeRefreshSeconds: 30
-    defaultRule: Host(`backend.memehub.lol`)
 certificatesResolvers:
   letsencrypt:
     acme:
@@ -37,7 +36,7 @@ certificatesResolvers:
       # caServer: https://acme-staging-v02.api.letsencrypt.org/directory
       tlsChallenge: {}
       httpChallenge:
-        entryPoint: web
+        entryPoint: unsecure
       # dnsChallenge:
       #   provider: digitalocean
       #   delayBeforeCheck: 120
