@@ -16,7 +16,7 @@ entryPoints:
           permanent: true
   websecure:
     address: :443
-    https:
+    http:
       tls:
         certResolver: letsencrypt
 serversTransport:
