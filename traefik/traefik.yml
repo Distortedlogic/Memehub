@@ -33,7 +33,6 @@ certificatesResolvers:
       email: jermeek@gmail.com
       storage: /etc/traefik/acme/acme.json
       dnsChallenge:
-        entryPoint: web
         provider: namecheap
         delayBeforeCheck: 120
         resolvers:

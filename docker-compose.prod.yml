@@ -2,10 +2,10 @@ version: "3.7"
 services:
   traefik:
     image: distortedlogic/traefik:latest
+    container_name: traefik
     volumes:
-      - ./letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./traefik.yml:/etc/traefik/traefik.yml
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml
     networks:
       - web
     ports:
@@ -23,7 +23,7 @@ services:
   backend:
     networks:
       - web
-      - memehub_backend
+      - backend
     deploy:
       labels:
         - traefik.enable=true
@@ -42,7 +42,7 @@ services:
     volumes:
       - sitedata:/var/lib/postgresql/data
     networks:
-      - memehub_backend
+      - backend
     deploy:
       replicas: 2
       update_config:
@@ -54,7 +54,7 @@ services:
     volumes:
       - redis:/data
     networks:
-      - memehub_backend
+      - backend
     deploy:
       replicas: 2
       update_config:
@@ -65,7 +65,7 @@ services:
   controllers:
     command: celery worker -B -l info -A controller.CELERY
     networks:
-      - memehub_backend
+      - backend
     deploy:
       replicas: 2
       update_config:
@@ -77,7 +77,7 @@ volumes:
   sitedata:
   redis:
 networks:
-  memehub_backend:
+  backend:
     driver: overlay
     attachable: true
   web:
