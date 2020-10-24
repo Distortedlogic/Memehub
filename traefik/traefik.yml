@@ -42,3 +42,20 @@ certificatesResolvers:
       #   resolvers:
       #     - 1.1.1.1:53
       #     - 8.8.8.8:53
+middlewares:
+  cors:
+    headers:
+      sslRedirect: true
+      accessControlMaxAge: 12
+      addVaryHeader: true
+      accessControlAllowCredentials: true
+      accessControlAllowMethods:
+        - OPTION
+        - POST
+        - GET
+        - PUT
+        - DELETE
+      accessControlAllowHeaders:
+        - "*"
+      accessControlAllowOriginList:
+        - https://memehub.lol
