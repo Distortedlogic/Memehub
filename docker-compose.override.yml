@@ -11,7 +11,6 @@ services:
       - 443:443
       - 8080:8080
     labels:
-      - traefik.http.routers.backend.rule=Host(`localhost`) && PathPrefix(`/traefik`)
       - traefik.http.routers.dashboard.service=api@internal
       - traefik.http.routers.dashboard.entrypoints=unsecure
       - traefik.http.routers.dashboard.service=dashboard-service
@@ -43,7 +42,7 @@ services:
   backend:
     labels:
       - traefik.enable=true
-      - traefik.http.routers.backend.rule=Host(`localhost`) && PathPrefix(`/graphql`)
+      - traefik.http.routers.backend.rule=PathPrefix(`/graphql`)
       - traefik.http.routers.backend.entrypoints=unsecure
       - traefik.http.routers.backend.service=backend-service
       - traefik.http.services.backend-service.loadbalancer.server.port=5000
