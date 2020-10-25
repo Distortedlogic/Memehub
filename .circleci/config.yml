@@ -52,6 +52,10 @@ workflows:
   build-docker-image-only:
     jobs:
       - build-and-deploy:
+          filters:
+              branches:
+                only:
+                  - main
           context:
             - dockerhub
             - traefik
