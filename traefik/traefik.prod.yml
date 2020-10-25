@@ -2,16 +2,31 @@ log:
   level: DEBUG
   filepath: /etc/traefik/log/traefik.log
 api:
+  dashboard: true
   insecure: true  
+  debug: true
 entryPoints:
   unsecure:
     address: :80
+  secure:
+    address: :443
 providers:
   providersThrottleDuration: 10
   docker:
-    defaultRule: Host(`{{ trimPrefix `/` .Name }}.docker.localhost`)
+    watch: true
     exposedByDefault: false
     network: web
+    swarmMode: true
+    swarmModeRefreshSeconds: 30
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: jermeek@gmail.com
+      storage: /etc/traefik/acme/acme.json
+      # caServer: https://acme-staging-v02.api.letsencrypt.org/directory
+      tlsChallenge: {}
+      httpChallenge:
+        entryPoint: unsecure
 middlewares:
   cors:
     headers:
