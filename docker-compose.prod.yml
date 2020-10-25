@@ -36,7 +36,7 @@ services:
         - traefik.http.services.backend.loadbalancer.sticky.cookie.httpOnly=true
         # - traefik.http.services.backend.loadbalancer.sticky.cookie.domain=".memehub.lol"
         - traefik.http.services.backend.loadbalancer.sticky.cookie.secure=true
-      replicas: 1
+      replicas: 2
       update_config:
         parallelism: 2
         delay: 10s
@@ -52,7 +52,7 @@ services:
     networks:
       - backend
     deploy:
-      replicas: 1
+      replicas: 2
       update_config:
         parallelism: 2
         delay: 10s
@@ -64,7 +64,7 @@ services:
     networks:
       - backend
     deploy:
-      replicas: 1
+      replicas: 2
       update_config:
         parallelism: 2
         delay: 10s
@@ -75,7 +75,7 @@ services:
     networks:
       - backend
     deploy:
-      replicas: 1
+      replicas: 2
       update_config:
         parallelism: 2
         delay: 10s
