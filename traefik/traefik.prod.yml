@@ -15,13 +15,6 @@ providers:
     exposedByDefault: false
     network: web
     swarmMode: true
-http:
-  services:
-    backend:
-      loadBalancer:
-        sticky:
-          cookie:
-            name: sticky_speed_cow
 certificatesResolvers:
   letsencrypt:
     acme:
