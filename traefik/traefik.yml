@@ -2,59 +2,11 @@ log:
   level: DEBUG
   filepath: /etc/traefik/log/traefik.log
 api:
-  dashboard: true
   insecure: true  
-  debug: true
 entryPoints:
   unsecure:
     address: :80
-    http:
-      redirections:
-        entryPoint:
-          to: secure
-          scheme: https
-          permanent: true
-  secure:
-    address: :443
-    http:
-      tls: {}
-serversTransport:
-  insecureSkipVerify: true
 providers:
-  providersThrottleDuration: 10
   docker:
     exposedByDefault: false
     network: web
-    swarmMode: true
-    swarmModeRefreshSeconds: 30
-certificatesResolvers:
-  letsencrypt:
-    acme:
-      email: jermeek@gmail.com
-      storage: /etc/traefik/acme/acme.json
-      # caServer: https://acme-staging-v02.api.letsencrypt.org/directory
-      tlsChallenge: {}
-      httpChallenge:
-        entryPoint: unsecure
-      # dnsChallenge:
-      #   provider: digitalocean
-      #   delayBeforeCheck: 120
-      #   resolvers:
-      #     - 1.1.1.1:53
-      #     - 8.8.8.8:53
-middlewares:
-  cors:
-    headers:
-      accessControlMaxAge: 12
-      addVaryHeader: true
-      Access-Control-Allow-Credentials: true
-      Access-Control-Allow-Methods:
-        - OPTION
-        - POST
-        - GET
-        - PUT
-        - DELETE
-      Access-Control-Allow-Headers:
-        - "*"
-      Access-Control-Allow-Origin:
-        - https://memehub.lol

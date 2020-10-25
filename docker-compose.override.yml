@@ -11,13 +11,12 @@ services:
       - 443:443
       - 8080:8080
     labels:
-      - traefik.http.routers.dashboard.rule=Host(`backend.memehub.lol`) && PathPrefix(`/traefik`)
       - traefik.http.routers.dashboard.service=api@internal
-      - traefik.http.routers.dashboard.entrypoints=secure
-      - traefik.http.services.dashboard.loadbalancer.server.port=8080
-      - traefik.http.routers.dashboard.tls=true
-      - traefik.http.routers.dashboard.tls.certresolver=letsencrypt
+      - traefik.http.routers.dashboard.entrypoints=unsecure
+      - traefik.http.routers.dashboard.service=dashboard-service
+      - traefik.http.services.dashboard-service.loadbalancer.server.port=8080
       - traefik.enable=true
+
   # ngrok:
   #     build: ./ngrok
   #     container_name: ngrok
@@ -41,6 +40,12 @@ services:
       - 3000:3000
     stdin_open: true
   backend:
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.backend.rule=PathPrefix(`/graphql`)
+      - traefik.http.routers.backend.entrypoints=unsecure
+      - traefik.http.routers.backend.service=backend-service
+      - traefik.http.services.backend-service.loadbalancer.server.port=5000
     depends_on:
       - sitedata
       - redis
