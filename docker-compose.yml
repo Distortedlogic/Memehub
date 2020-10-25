@@ -7,7 +7,8 @@ services:
     image: distortedlogic/backend:latest
     container_name: backend
   sitedata:
-    image: distortedlogic/postgres:latest
+    # image: distortedlogic/postgres:latest
+    image: postgres:latest
     container_name: sitedata
   redis:
     image: distortedlogic/redis:latest
