@@ -35,7 +35,7 @@ services:
         - traefik.http.services.backend.loadbalancer.sticky.cookie.name=sticky_speed_cow
         - traefik.http.services.backend.loadbalancer.sticky.cookie.httpOnly=true
         # - traefik.http.services.backend.loadbalancer.sticky.cookie.domain="backend.memehub.lol"
-        # - traefik.http.services.backend.loadbalancer.sticky.cookie.secure require HTTPS
+        - traefik.http.services.backend.loadbalancer.sticky.cookie.secure require HTTPS
       replicas: 2
       update_config:
         parallelism: 2
