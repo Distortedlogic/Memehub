@@ -39,6 +39,7 @@ jobs:
             echo $POSTGRES_PASSWORD
             echo $POSTGRES_USER
             echo $POSTGRES_DB
+            echo $DOCKERHUB_TOKEN
       - run:
           name: Build Postgres Docker Image
           command: docker build
