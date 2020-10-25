@@ -9,7 +9,6 @@ entryPoints:
 providers:
   providersThrottleDuration: 10
   docker:
-    defaultRule: Host(`{{ trimPrefix `/` .Name }}.docker.localhost`)
     exposedByDefault: false
     network: web
 middlewares:
