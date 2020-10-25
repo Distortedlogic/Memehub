@@ -15,6 +15,15 @@ providers:
     exposedByDefault: false
     network: web
     swarmMode: true
+http:
+  services:
+    backend:
+      loadBalancer:
+        sticky:
+          cookie:
+            name: my_sticky_cookie_name
+            secure: true
+            httpOnly: true
 certificatesResolvers:
   letsencrypt:
     acme:
