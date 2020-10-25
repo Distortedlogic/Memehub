@@ -18,13 +18,19 @@ services:
         parallelism: 1
         delay: 10s
       labels:
+        - traefik.enable=true
         - traefik.http.routers.dashboard.rule=Host(`backend.memehub.lol`) && PathPrefix(`/traefik`)
         - traefik.http.routers.dashboard.service=api@internal
         - traefik.http.routers.dashboard.entrypoints=secure
         - traefik.http.services.dashboard.loadbalancer.server.port=8080
         - traefik.http.routers.dashboard.tls=true
         - traefik.http.routers.dashboard.tls.certresolver=letsencrypt
-        - traefik.enable=true
+        # global redirect to https
+        - traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)
+        - traefik.http.routers.http-catchall.entrypoints=web
+        - traefik.http.routers.http-catchall.middlewares=redirect-to-https
+        # middleware redirect
+        - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
       restart_policy:
         condition: on-failure
   backend:
@@ -38,9 +44,7 @@ services:
         - traefik.http.routers.backend.entrypoints=secure
         - traefik.http.routers.backend.tls=true
         - traefik.http.services.backend.loadbalancer.server.port=5000
-        - traefik.http.services.backend.loadbalancer.server.scheme=https
         - traefik.http.routers.backend.tls.certresolver=letsencrypt
-        - traefik.http.routers.backend.middlewares=cors
       replicas: 2
       update_config:
         parallelism: 2
