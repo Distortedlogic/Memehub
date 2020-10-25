@@ -22,7 +22,7 @@ http:
         sticky:
           cookie:
             name: sticky_speed_cow
-            secure: require HTTPS
+            secure: true
             httpOnly: true
             domain: .memehub.lol
 certificatesResolvers:
