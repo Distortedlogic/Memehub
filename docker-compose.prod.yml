@@ -1,11 +1,4 @@
 version: "3.7"
-# secrets:
-#   POSTGRES_USER:
-#     external: true
-#   POSTGRES_PASSWORD:
-#     external: true
-#   POSTGRES_DB:
-#     external: true
 services:
   traefik:
     command: --configFile=/etc/traefik/traefik.yml
@@ -55,18 +48,10 @@ services:
       restart_policy:
         condition: on-failure
   sitedata:
-    image: postgres:latest
     volumes:
       - sitedata:/var/lib/postgresql/data
     networks:
       - backend
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
-      # POSTGRES_USER_FILE: /run/secrets/POSTGRES_USER
-      # POSTGRES_PASSWORD_FILE: /run/secrets/POSTGRES_PASSWORD
-      # POSTGRES_DB_FILE: /run/secrets/POSTGRES_DB
     deploy:
       replicas: 2
       update_config:
