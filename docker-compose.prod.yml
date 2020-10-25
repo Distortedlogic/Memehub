@@ -61,7 +61,7 @@ services:
     networks:
       - backend
     environment:
-      POSTGRES_USERNAME: postgres
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
       # POSTGRES_USER_FILE: /run/secrets/POSTGRES_USER
