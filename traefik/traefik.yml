@@ -10,8 +10,6 @@ entryPoints:
     address: :80
   secure:
     address: :443
-serversTransport:
-  insecureSkipVerify: true
 providers:
   providersThrottleDuration: 10
   docker:
