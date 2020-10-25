@@ -23,8 +23,6 @@ http:
           cookie:
             name: sticky_speed_cow
             secure: true
-            httpOnly: true
-            domain: .memehub.lol
 certificatesResolvers:
   letsencrypt:
     acme:
