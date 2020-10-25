@@ -45,17 +45,16 @@ certificatesResolvers:
 middlewares:
   cors:
     headers:
-      sslRedirect: true
       accessControlMaxAge: 12
       addVaryHeader: true
-      accessControlAllowCredentials: true
-      accessControlAllowMethods:
+      Access-Control-Allow-Credentials: true
+      Access-Control-Allow-Methods:
         - OPTION
         - POST
         - GET
         - PUT
         - DELETE
-      accessControlAllowHeaders:
+      Access-Control-Allow-Headers:
         - "*"
-      accessControlAllowOriginList:
+      Access-Control-Allow-Origin:
         - https://memehub.lol
