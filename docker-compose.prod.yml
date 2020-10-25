@@ -33,8 +33,8 @@ services:
         - traefik.http.routers.backend.tls.certresolver=letsencrypt
         - traefik.http.services.backend.loadbalancer.sticky.cookie=true
         - traefik.http.services.backend.loadbalancer.sticky.cookie.name=sticky_speed_cow
-        # - traefik.http.services.backend.loadbalancer.sticky.cookie.httpOnly=true
-        - traefik.http.services.backend.loadbalancer.sticky.cookie.domain="backend.memehub.lol"
+        - traefik.http.services.backend.loadbalancer.sticky.cookie.httpOnly=true
+        # - traefik.http.services.backend.loadbalancer.sticky.cookie.domain="backend.memehub.lol"
         # - traefik.http.services.backend.loadbalancer.sticky.cookie.secure require HTTPS
       replicas: 2
       update_config:
