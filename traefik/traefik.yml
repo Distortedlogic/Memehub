@@ -7,23 +7,6 @@ entryPoints:
   unsecure:
     address: :80
 providers:
-  providersThrottleDuration: 10
   docker:
     exposedByDefault: false
     network: web
-middlewares:
-  cors:
-    headers:
-      accessControlMaxAge: 100
-      addVaryHeader: true
-      Access-Control-Allow-Credentials: true
-      Access-Control-Allow-Methods:
-        - OPTION
-        - POST
-        - GET
-        - PUT
-        - DELETE
-      Access-Control-Allow-Headers:
-        - "*"
-      Access-Control-Allow-Origin:
-        - https://memehub.lol

@@ -19,13 +19,8 @@ services:
         delay: 10s
       labels:
         - traefik.enable=true
-        - traefik.http.routers.dashboard.rule=Host(`backend.memehub.lol`) && PathPrefix(`/traefik`)
+        - traefik.http.routers.dashboard.rule=Host(`backend.memehub.lol`)
         - traefik.http.routers.dashboard.service=api@internal
-        - traefik.http.routers.dashboard.entrypoints=secure
-        - traefik.http.routers.dashboard.services=dashboard-services
-        - traefik.http.services.dashboard-services.loadbalancer.server.port=8080
-        - traefik.http.routers.dashboard.tls=true
-        - traefik.http.routers.dashboard.tls.certresolver=letsencrypt
       restart_policy:
         condition: on-failure
   backend:
@@ -37,9 +32,7 @@ services:
         - traefik.enable=true
         - traefik.http.routers.backend.rule=Host(`backend.memehub.lol`)
         - traefik.http.routers.backend.entrypoints=secure
-        - traefik.http.routers.backend.tls=true
-        - traefik.http.services.backend-services.loadbalancer.server.port=5000
-        - traefik.http.routers.backend.services=backend-services
+        - traefik.http.services.backend.loadbalancer.server.port=5000
         - traefik.http.routers.backend.tls.certresolver=letsencrypt
       replicas: 2
       update_config:
