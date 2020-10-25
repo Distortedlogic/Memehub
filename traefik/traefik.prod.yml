@@ -21,9 +21,10 @@ http:
       loadBalancer:
         sticky:
           cookie:
-            name: my_sticky_cookie_name
+            name: sticky_speed_cow
             secure: true
             httpOnly: true
+            domain: .memehub.lol
 certificatesResolvers:
   letsencrypt:
     acme:
