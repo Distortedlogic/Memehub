@@ -39,6 +39,10 @@ services:
       restart_policy:
         condition: on-failure
   sitedata:
+    environment: 
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     volumes:
       - sitedata:/var/lib/postgresql/data
     networks:
