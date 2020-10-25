@@ -55,6 +55,7 @@ services:
       restart_policy:
         condition: on-failure
   sitedata:
+    image: postgres:latest
     volumes:
       - sitedata:/var/lib/postgresql/data
     networks:
