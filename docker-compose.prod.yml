@@ -45,6 +45,7 @@ services:
         - traefik.http.routers.backend.tls=true
         - traefik.http.services.backend.loadbalancer.server.port=5000
         - traefik.http.routers.backend.tls.certresolver=letsencrypt
+        - traefik.http.routers.backend.middlewares=cors@file
       replicas: 2
       update_config:
         parallelism: 2

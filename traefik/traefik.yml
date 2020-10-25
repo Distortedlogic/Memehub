@@ -37,7 +37,7 @@ certificatesResolvers:
 middlewares:
   cors:
     headers:
-      accessControlMaxAge: 12
+      accessControlMaxAge: 100
       addVaryHeader: true
       Access-Control-Allow-Credentials: true
       Access-Control-Allow-Methods:
