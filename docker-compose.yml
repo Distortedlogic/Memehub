@@ -2,11 +2,12 @@ version: "3.7"
 services:
   traefik:
     image: distortedlogic/traefik:latest
+    container_name: traefik
     build: ./traefik
-    command: --configFile=/etc/traefik/traefik.yml
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/traefik.yml:/etc/traefik/traefik.yml
+      - ./acme:/etc/traefik/acme
     ports:
       - 80:80
       - 443:443
@@ -14,8 +15,7 @@ services:
     labels:
       - traefik.http.routers.dashboard.service=api@internal
       - traefik.http.routers.dashboard.entrypoints=unsecure
-      - traefik.http.routers.dashboard.service=dashboard-service
-      - traefik.http.services.dashboard-service.loadbalancer.server.port=8080
+      - traefik.http.services.dashboard.loadbalancer.server.port=8080
       - traefik.enable=true
 
   # ngrok:
@@ -33,6 +33,11 @@ services:
       - backend
       - sitedata
       - redis
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.frontend.rule=Host(`localhost`)
+      - traefik.http.routers.frontend.entrypoints=unsecure
+      - traefik.http.services.frontend.loadbalancer.server.port=3000
     volumes:
       - ./frontend:/app
     environment:
@@ -42,12 +47,7 @@ services:
     stdin_open: true
   backend:
     image: distortedlogic/backend:latest
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.backend.rule=PathPrefix(`/graphql`)
-      - traefik.http.routers.backend.entrypoints=unsecure
-      - traefik.http.routers.backend.service=backend-service
-      - traefik.http.services.backend-service.loadbalancer.server.port=5000
+    container_name: backend
     depends_on:
       - sitedata
       - redis
@@ -63,6 +63,7 @@ services:
       - 5000:5000
   sitedata:
     image: postgres:latest
+    container_name: sitedata
     restart: on-failure
     build: ./postgres
     volumes:
@@ -74,6 +75,7 @@ services:
       - 5432:5432
   redis:
     image: distortedlogic/redis:latest
+    container_name: redis
     restart: on-failure
     build: ./redis
     volumes:
