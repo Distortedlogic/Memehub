@@ -72,6 +72,10 @@ services:
         condition: on-failure
   controllers:
     command: celery worker -B -l info -A controller.CELERY
+    environment: 
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     networks:
       - backend
     deploy:
