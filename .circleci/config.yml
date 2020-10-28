@@ -52,7 +52,7 @@ jobs:
           name: Push Postgres Image
           command: docker push distortedlogic/postgres:latest
       - run: ssh  -o StrictHostKeyChecking=no ubuntu@ec2-3-238-106-37.compute-1.amazonaws.com "cd ~/Memehub && git pull origin main"
-      - run: ssh  -o StrictHostKeyChecking=no ubuntu@ec2-3-238-106-37.compute-1.amazonaws.com "docker stack deploy -c ~/Memehub/memehub-compose.yml memehub"
+      - run: ssh  -o StrictHostKeyChecking=no ubuntu@ec2-3-238-106-37.compute-1.amazonaws.com "docker stack deploy -c ~/Memehub/docker-stack.yml memehub"
 workflows:
   build-docker-image-only:
     jobs:

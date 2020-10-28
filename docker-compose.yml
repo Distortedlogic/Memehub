@@ -1,23 +1,5 @@
 version: "3.7"
 services:
-  traefik:
-    image: distortedlogic/traefik:latest
-    container_name: traefik
-    build: ./traefik
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./traefik/traefik.yml:/etc/traefik/traefik.yml
-      - ./acme:/etc/traefik/acme
-    ports:
-      - 80:80
-      - 443:443
-      - 8080:8080
-    labels:
-      - traefik.http.routers.dashboard.service=api@internal
-      - traefik.http.routers.dashboard.entrypoints=unsecure
-      - traefik.http.services.dashboard.loadbalancer.server.port=8080
-      - traefik.enable=true
-
   # ngrok:
   #     build: ./ngrok
   #     container_name: ngrok
@@ -38,6 +20,11 @@ services:
       - traefik.http.routers.frontend.rule=Host(`localhost`)
       - traefik.http.routers.frontend.entrypoints=unsecure
       - traefik.http.services.frontend.loadbalancer.server.port=3000
+      - traefik.http.services.frontend.loadbalancer.sticky.cookie=true
+      - traefik.http.services.frontend.loadbalancer.sticky.cookie.name=sticky_speed_cow
+      - traefik.http.services.frontend.loadbalancer.sticky.cookie.httpOnly=true
+      # - traefik.http.services.frontend.loadbalancer.sticky.cookie.domain=test.memehub.lol
+      - traefik.http.services.frontend.loadbalancer.sticky.cookie.secure=true
     volumes:
       - ./frontend:/app
     environment:
@@ -48,6 +35,11 @@ services:
   backend:
     image: distortedlogic/backend:latest
     container_name: backend
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.backend.rule=Host(`localhost`) && PathPrefix(`/graphql`)
+      - traefik.http.routers.backend.entrypoints=unsecure
+      - traefik.http.services.backend.loadbalancer.server.port=5000
     depends_on:
       - sitedata
       - redis
@@ -66,6 +58,7 @@ services:
     container_name: sitedata
     restart: on-failure
     build: ./postgres
+    command: -c ssl=on -c ssl_cert_file=/var/lib/postgresql/server.crt -c ssl_key_file=/var/lib/postgresql/server.key
     volumes:
       - ./backups:/backups
       - sitedata:/var/lib/postgresql/data
@@ -91,18 +84,18 @@ services:
     environment:
       - REDIS_HOSTS=local:redis:6379
     ports:
-      - "8081:8081"
+      - 8081:8081
   controllers:
     image: distortedlogic/controllers:latest
+    build: ./controllers
     depends_on:
-      - controller-tasks
       - sitedata
       - redis
     container_name: controllers
     env_file:
       - ./shared.env
     restart: on-failure
-    command: gunicorn -c "python:config.gunicorn" --reload "controller:APP"
+    command: gunicorn --reload -c "python:config.gunicorn" "controller:APP"
     volumes:
       - ./controllers:/app
     ports:
@@ -111,33 +104,15 @@ services:
     image: distortedlogic/controllers:latest
     container_name: controller-tasks
     depends_on:
+      - controllers
       - sitedata
       - redis
     restart: on-failure
-    build:
-      context: ./controllers
-      # dockerfile: Dockerfile.prod
-      # args:
-      #   POSTGRES_USER: postgres
-      #   POSTGRES_DB: postgres
-      #   POSTGRES_PASSWORD: postgres
     command: celery worker -B -l info -A controller.CELERY
     env_file:
       - ./shared.env
     volumes:
       - ./controllers:/app
-  # task-monitor:
-  #     image: controllers-image:1.0.0
-  #     depends_on:
-  #         - controllers
-  #     container_name: task_monitor
-  #     entrypoint: flower
-  #     command: -A controller.CELERY
-  #     restart: on-failure
-  #     volumes:
-  #         - ./controllers:/app
-  #     ports:
-  #         - 5555:5555
 volumes:
   sitedata:
   redis:
