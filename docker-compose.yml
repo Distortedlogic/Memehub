@@ -60,7 +60,6 @@ services:
     build: ./postgres
     command: -c ssl=on -c ssl_cert_file=/var/lib/postgresql/server.crt -c ssl_key_file=/var/lib/postgresql/server.key
     volumes:
-      - ./backups:/backups
       - sitedata:/var/lib/postgresql/data
     env_file:
       - ./shared.env
