@@ -47,11 +47,7 @@ services:
       restart_policy:
         condition: on-failure
   sitedata:
-    image: postgres:latest
-    environment: 
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+    image: distortedlogic/postgres:latest
     volumes:
       - sitedata:/var/lib/postgresql/data
     networks:
@@ -79,10 +75,6 @@ services:
   controllers:
     image: distortedlogic/controllers:latest
     command: celery worker -B -l info -A controller.CELERY
-    environment: 
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
     networks:
       - backend
     deploy:
@@ -92,35 +84,35 @@ services:
         delay: 10s
       restart_policy:
         condition: on-failure
-  pgadmin:
-    image: dpage/pgadmin4
-    environment: 
-      PGADMIN_DEFAULT_EMAIL: jermeek@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: testtesttest
-      PGADMIN_ENABLE_TLS: 'True'
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.pgadmin.rule=Host(`pgadmin.memehub.lol`)
-      - traefik.http.routers.pgadmin.entrypoints=secure
-      - traefik.http.services.pgadmin.loadbalancer.server.port=443
-      - traefik.http.routers.pgadmin.tls.certresolver=letsencrypt
-    networks:
-      - web
-      - backend
-    volumes:
-      - pgadmin:/var/lib/pgadmin
-    deploy:
-      replicas: 1
-      update_config:
-        parallelism: 2
-        delay: 10s
-      restart_policy:
-        condition: on-failure
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   environment: 
+  #     PGADMIN_DEFAULT_EMAIL: jermeek@gmail.com
+  #     PGADMIN_DEFAULT_PASSWORD: testtesttest
+  #     PGADMIN_ENABLE_TLS: 'True'
+  #   labels:
+  #     - traefik.enable=true
+  #     - traefik.http.routers.pgadmin.rule=Host(`pgadmin.memehub.lol`)
+  #     - traefik.http.routers.pgadmin.entrypoints=secure
+  #     - traefik.http.services.pgadmin.loadbalancer.server.port=443
+  #     - traefik.http.routers.pgadmin.tls.certresolver=letsencrypt
+  #   networks:
+  #     - web
+  #     - backend
+  #   volumes:
+  #     - pgadmin:/var/lib/pgadmin
+  #   deploy:
+  #     replicas: 1
+  #     update_config:
+  #       parallelism: 2
+  #       delay: 10s
+  #     restart_policy:
+  #       condition: on-failure
 volumes:
   sitedata:
   redis:
   acme:
-  pgadmin:
+  # pgadmin:
 networks:
   backend:
     driver: overlay

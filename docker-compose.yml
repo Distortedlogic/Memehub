@@ -72,8 +72,6 @@ services:
     build: ./redis
     volumes:
       - redis:/data
-    ports:
-      - 6379:6379
   redis-commander:
     restart: on-failure
     depends_on:
@@ -94,11 +92,9 @@ services:
     env_file:
       - ./shared.env
     restart: on-failure
-    command: gunicorn --reload -c "python:config.gunicorn" "controller:APP"
+    command: gunicorn -c "python:config.gunicorn" --reload "controller:APP"
     volumes:
       - ./controllers:/app
-    ports:
-      - 8000:8000
   controller-tasks:
     image: distortedlogic/controllers:latest
     container_name: controller-tasks
