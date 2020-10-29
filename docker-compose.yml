@@ -1,17 +1,111 @@
 version: "3.7"
 services:
-  traefik:
-    image: distortedlogic/traefik:latest
-    container_name: traefik
+  # ngrok:
+  #     build: ./ngrok
+  #     container_name: ngrok
+  #     restart: on-failure
+  #     command: /bin/sh -c "ngrok authtoken ${ngrok_auth} && ngrok http backend:5000 -hostname=react.memehub.lol --log stdout"
+  frontend:
+    image: distortedlogic/frontend:latest
+    container_name: frontend
+    restart: on-failure
+    build:
+      context: ./frontend
+    depends_on:
+      - backend
+      - sitedata
+      - redis
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.frontend.rule=Host(`localhost`)
+      - traefik.http.routers.frontend.entrypoints=unsecure
+      - traefik.http.services.frontend.loadbalancer.server.port=3000
+      - traefik.http.services.frontend.loadbalancer.sticky.cookie=true
+      - traefik.http.services.frontend.loadbalancer.sticky.cookie.name=sticky_speed_cow
+      - traefik.http.services.frontend.loadbalancer.sticky.cookie.httpOnly=true
+      # - traefik.http.services.frontend.loadbalancer.sticky.cookie.domain=test.memehub.lol
+      - traefik.http.services.frontend.loadbalancer.sticky.cookie.secure=true
+    volumes:
+      - ./frontend:/app
+    environment:
+      - NODE_ENV=development
+    ports:
+      - 3000:3000
+    stdin_open: true
   backend:
     image: distortedlogic/backend:latest
     container_name: backend
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.backend.rule=Host(`localhost`) && PathPrefix(`/graphql`)
+      - traefik.http.routers.backend.entrypoints=unsecure
+      - traefik.http.services.backend.loadbalancer.server.port=5000
+    depends_on:
+      - sitedata
+      - redis
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./backend
+    restart: on-failure
+    env_file:
+      - ./shared.env
+    volumes:
+      - ./backend:/app
+    ports:
+      - 5000:5000
   sitedata:
-    image: distortedlogic/postgres:latest
+    image: postgres:13-alpine
     container_name: sitedata
+    restart: on-failure
+    volumes:
+      - sitedata:/var/lib/postgresql/data
+    env_file:
+      - ./shared.env
+    ports:
+      - 5432:5432
   redis:
     image: distortedlogic/redis:latest
     container_name: redis
+    restart: on-failure
+    build: ./redis
+    volumes:
+      - redis:/data
+  redis-commander:
+    restart: on-failure
+    depends_on:
+        - redis
+    container_name: redis-commander
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - 8081:8081
   controllers:
     image: distortedlogic/controllers:latest
+    build: ./controllers
+    depends_on:
+      - sitedata
+      - redis
     container_name: controllers
+    env_file:
+      - ./shared.env
+    restart: on-failure
+    command: gunicorn -c "python:config.gunicorn" --reload "controller:APP"
+    volumes:
+      - ./controllers:/app
+  controller-tasks:
+    image: distortedlogic/controllers:latest
+    container_name: controller-tasks
+    depends_on:
+      - controllers
+      - sitedata
+      - redis
+    restart: on-failure
+    command: celery worker -B -l info -A controller.CELERY
+    env_file:
+      - ./shared.env
+    volumes:
+      - ./controllers:/app
+volumes:
+  sitedata:
+  redis:

@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   traefik:
-    command: --configFile=/etc/traefik/traefik.yml
+    image: distortedlogic/traefik:latest
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/traefik.prod.yml:/etc/traefik/traefik.yml
@@ -11,9 +11,11 @@ services:
     ports:
       - 80:80
       - 443:443
-      - 8080:8080
     deploy:
       mode: global
+      placement:
+        constraints:
+          - node.role == manager
       update_config:
         parallelism: 1
         delay: 10s
@@ -22,6 +24,7 @@ services:
       restart_policy:
         condition: on-failure
   backend:
+    image: distortedlogic/backend:latest
     networks:
       - web
       - backend
@@ -32,51 +35,84 @@ services:
         - traefik.http.routers.backend.entrypoints=secure
         - traefik.http.services.backend.loadbalancer.server.port=5000
         - traefik.http.routers.backend.tls.certresolver=letsencrypt
-      replicas: 2
+        - traefik.http.services.backend.loadbalancer.sticky.cookie=true
+        - traefik.http.services.backend.loadbalancer.sticky.cookie.name=sticky_speed_cow
+        - traefik.http.services.backend.loadbalancer.sticky.cookie.httpOnly=true
+        - traefik.http.services.backend.loadbalancer.sticky.cookie.domain=.memehub.lol
+        - traefik.http.services.backend.loadbalancer.sticky.cookie.secure=true
+      replicas: 1
       update_config:
         parallelism: 2
         delay: 10s
       restart_policy:
         condition: on-failure
   sitedata:
+    image: distortedlogic/postgres:latest
     volumes:
       - sitedata:/var/lib/postgresql/data
     networks:
       - backend
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         parallelism: 2
         delay: 10s
       restart_policy:
         condition: on-failure
   redis:
+    image: distortedlogic/redis:latest
     volumes:
       - redis:/data
     networks:
       - backend
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         parallelism: 2
         delay: 10s
       restart_policy:
         condition: on-failure
   controllers:
+    image: distortedlogic/controllers:latest
     command: celery worker -B -l info -A controller.CELERY
     networks:
       - backend
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         parallelism: 2
         delay: 10s
       restart_policy:
         condition: on-failure
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   environment: 
+  #     PGADMIN_DEFAULT_EMAIL: jermeek@gmail.com
+  #     PGADMIN_DEFAULT_PASSWORD: testtesttest
+  #     PGADMIN_ENABLE_TLS: 'True'
+  #   labels:
+  #     - traefik.enable=true
+  #     - traefik.http.routers.pgadmin.rule=Host(`pgadmin.memehub.lol`)
+  #     - traefik.http.routers.pgadmin.entrypoints=secure
+  #     - traefik.http.services.pgadmin.loadbalancer.server.port=443
+  #     - traefik.http.routers.pgadmin.tls.certresolver=letsencrypt
+  #   networks:
+  #     - web
+  #     - backend
+  #   volumes:
+  #     - pgadmin:/var/lib/pgadmin
+  #   deploy:
+  #     replicas: 1
+  #     update_config:
+  #       parallelism: 2
+  #       delay: 10s
+  #     restart_policy:
+  #       condition: on-failure
 volumes:
   sitedata:
   redis:
   acme:
+  # pgadmin:
 networks:
   backend:
     driver: overlay
