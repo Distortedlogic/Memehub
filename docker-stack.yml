@@ -1,28 +1,5 @@
 version: "3.7"
 services:
-  traefik:
-    image: distortedlogic/traefik:latest
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./traefik/traefik.prod.yml:/etc/traefik/traefik.yml
-      - acme:/etc/traefik/acme
-    networks:
-      - web
-    ports:
-      - 80:80
-      - 443:443
-    deploy:
-      mode: global
-      placement:
-        constraints:
-          - node.role == manager
-      update_config:
-        parallelism: 1
-        delay: 10s
-      labels:
-        - traefik.enable=false
-      restart_policy:
-        condition: on-failure
   backend:
     image: distortedlogic/backend:latest
     networks:
