@@ -54,11 +54,9 @@ services:
     ports:
       - 5000:5000
   sitedata:
-    image: postgres:latest
+    image: postgres:13-alpine
     container_name: sitedata
     restart: on-failure
-    build: ./postgres
-    command: -c ssl=on -c ssl_cert_file=/var/lib/postgresql/server.crt -c ssl_key_file=/var/lib/postgresql/server.key
     volumes:
       - sitedata:/var/lib/postgresql/data
     env_file:
