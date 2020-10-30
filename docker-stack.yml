@@ -12,6 +12,10 @@ services:
     networks:
       - web
       - backend
+    secrets:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
     environment:
       POSTGRES_USER: /run/secrets/POSTGRES_USER
       POSTGRES_PASSWORD: /run/secrets/POSTGRES_PASSWORD
@@ -40,6 +44,10 @@ services:
       - sitedata:/var/lib/postgresql/data
     networks:
       - backend
+    secrets:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
     environment:
       POSTGRES_USER: /run/secrets/POSTGRES_USER
       POSTGRES_PASSWORD: /run/secrets/POSTGRES_PASSWORD
@@ -69,6 +77,10 @@ services:
     command: celery worker -B -l info -A controller.CELERY
     networks:
       - backend
+    secrets:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
     environment:
       POSTGRES_USER: /run/secrets/POSTGRES_USER
       POSTGRES_PASSWORD: /run/secrets/POSTGRES_PASSWORD
