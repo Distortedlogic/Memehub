@@ -1,10 +1,21 @@
 version: "3.7"
+secrets:
+  POSTGRES_USER:
+    external: true
+  POSTGRES_PASSWORD:
+    external: true
+  POSTGRES_DB:
+    external: true
 services:
   backend:
     image: distortedlogic/backend:latest
     networks:
       - web
       - backend
+    environment:
+      POSTGRES_USER: /run/secrets/POSTGRES_USER
+      POSTGRES_PASSWORD: /run/secrets/POSTGRES_PASSWORD
+      POSTGRES_DB: /run/secrets/POSTGRES_DB
     deploy:
       labels:
         - traefik.enable=true
@@ -24,11 +35,15 @@ services:
       restart_policy:
         condition: on-failure
   sitedata:
-    image: distortedlogic/postgres:latest
+    image: postgres:13-alpine
     volumes:
       - sitedata:/var/lib/postgresql/data
     networks:
       - backend
+    environment:
+      POSTGRES_USER: /run/secrets/POSTGRES_USER
+      POSTGRES_PASSWORD: /run/secrets/POSTGRES_PASSWORD
+      POSTGRES_DB: /run/secrets/POSTGRES_DB
     deploy:
       replicas: 1
       update_config:
@@ -54,6 +69,10 @@ services:
     command: celery worker -B -l info -A controller.CELERY
     networks:
       - backend
+    environment:
+      POSTGRES_USER: /run/secrets/POSTGRES_USER
+      POSTGRES_PASSWORD: /run/secrets/POSTGRES_PASSWORD
+      POSTGRES_DB: /run/secrets/POSTGRES_DB
     deploy:
       replicas: 1
       update_config:
