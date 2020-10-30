@@ -17,9 +17,9 @@ services:
       - POSTGRES_PASSWORD
       - POSTGRES_DB
     environment:
-      POSTGRES_USER: POSTGRES_USER
-      POSTGRES_PASSWORD: POSTGRES_PASSWORD
-      POSTGRES_DB: POSTGRES_DB
+      POSTGRES_USER_FILE: /run/secrets/POSTGRES_USER
+      POSTGRES_PASSWORD_FILE: /run/secrets/POSTGRES_PASSWORD
+      POSTGRES_DB_FILE: /run/secrets/POSTGRES_DB
     deploy:
       labels:
         - traefik.enable=true
@@ -49,9 +49,9 @@ services:
       - POSTGRES_PASSWORD
       - POSTGRES_DB
     environment:
-      POSTGRES_USER: /run/secrets/POSTGRES_USER
-      POSTGRES_PASSWORD: /run/secrets/POSTGRES_PASSWORD
-      POSTGRES_DB: /run/secrets/POSTGRES_DB
+      POSTGRES_USER_FILE: /run/secrets/POSTGRES_USER
+      POSTGRES_PASSWORD_FILE: /run/secrets/POSTGRES_PASSWORD
+      POSTGRES_DB_FILE: /run/secrets/POSTGRES_DB
     deploy:
       replicas: 1
       update_config:
@@ -82,9 +82,9 @@ services:
       - POSTGRES_PASSWORD
       - POSTGRES_DB
     environment:
-      POSTGRES_USER: /run/secrets/POSTGRES_USER
-      POSTGRES_PASSWORD: /run/secrets/POSTGRES_PASSWORD
-      POSTGRES_DB: /run/secrets/POSTGRES_DB
+      POSTGRES_USER_FILE: /run/secrets/POSTGRES_USER
+      POSTGRES_PASSWORD_FILE: /run/secrets/POSTGRES_PASSWORD
+      POSTGRES_DB_FILE: /run/secrets/POSTGRES_DB
     deploy:
       replicas: 1
       update_config:
