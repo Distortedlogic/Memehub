@@ -35,7 +35,7 @@ services:
       restart_policy:
         condition: on-failure
   sitedata:
-    image: postgres:13-alpine
+    image: postgres:latest
     volumes:
       - sitedata:/var/lib/postgresql/data
     networks:
@@ -107,7 +107,6 @@ services:
 volumes:
   sitedata:
   redis:
-  acme:
   # pgadmin:
 networks:
   backend:
