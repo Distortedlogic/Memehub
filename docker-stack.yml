@@ -88,6 +88,31 @@ services:
         delay: 10s
       restart_policy:
         condition: on-failure
+  notebook:
+    build:
+        context: ./jupyter
+        dockerfile: Dockerfile
+    container_name: notebook
+    restart: on-failure
+    networks:
+      - backend
+      - web
+    command: jupyter lab
+    volumes:
+      - ./jupyter/notebooks:/notebooks
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.jupyter.rule=Host(`jupyter.memehub.lol`)
+        - traefik.http.routers.jupyter.entrypoints=secure
+        - traefik.http.services.jupyter.loadbalancer.server.port=8888
+        - traefik.http.routers.jupyter.tls.certresolver=letsencrypt
+      replicas: 1
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
   # pgadmin:
   #   image: dpage/pgadmin4
   #   environment: 
