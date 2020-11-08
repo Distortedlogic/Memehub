@@ -24,6 +24,12 @@ jobs:
       - run:
           name: Push Redis Image
           command: docker push distortedlogic/redis:latest
+      - run:
+          name: Build Notebook Docker Image
+          command: docker build -t distortedlogic/notebook:latest ./jupyter
+      - run:
+          name: Push Notebook Image
+          command: docker push distortedlogic/notebook:latest
       - run: ssh  -o StrictHostKeyChecking=no ubuntu@ec2-3-238-106-37.compute-1.amazonaws.com "cd ~/Memehub && git pull origin main"
       - run: ssh  -o StrictHostKeyChecking=no ubuntu@ec2-3-238-106-37.compute-1.amazonaws.com "docker stack deploy -c ~/Memehub/docker-stack.yml memehub"
       - run: ssh  -o StrictHostKeyChecking=no ubuntu@ec2-3-238-106-37.compute-1.amazonaws.com "docker service update --image distortedlogic/controllers memehub_controllers"
