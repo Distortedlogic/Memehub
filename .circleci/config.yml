@@ -26,6 +26,8 @@ jobs:
           command: docker push distortedlogic/redis:latest
       - run: ssh  -o StrictHostKeyChecking=no ubuntu@ec2-3-238-106-37.compute-1.amazonaws.com "cd ~/Memehub && git pull origin main"
       - run: ssh  -o StrictHostKeyChecking=no ubuntu@ec2-3-238-106-37.compute-1.amazonaws.com "docker stack deploy -c ~/Memehub/docker-stack.yml memehub"
+      - run: ssh  -o StrictHostKeyChecking=no ubuntu@ec2-3-238-106-37.compute-1.amazonaws.com "docker service update --image distortedlogic/controllers memehub_controllers"
+      - run: ssh  -o StrictHostKeyChecking=no ubuntu@ec2-3-238-106-37.compute-1.amazonaws.com "docker service update --image distortedlogic/backend memehub_backend"
 workflows:
   build-docker-image-only:
     jobs:
