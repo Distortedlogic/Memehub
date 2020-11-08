@@ -5,6 +5,12 @@ services:
   #     container_name: ngrok
   #     restart: on-failure
   #     command: /bin/sh -c "ngrok authtoken ${ngrok_auth} && ngrok http backend:5000 -hostname=react.memehub.lol --log stdout"
+  # tintoy:
+  #   image: inertia/tintoy:latest
+  #   container_name: tintoy
+  #   restart: on-failure
+  #   logging:
+  #     driver: none
   frontend:
     image: distortedlogic/frontend:latest
     container_name: frontend
@@ -106,6 +112,20 @@ services:
       - ./shared.env
     volumes:
       - ./controllers:/app
+  notebook:
+    build:
+        context: ./jupyter
+        dockerfile: Dockerfile
+    container_name: notebook
+    restart: on-failure
+    command: jupyter lab
+    volumes:
+        - ./jupyter/notebooks:/notebooks
+    environment:
+      - JUPYTER_TOKEN=password
+    ports:
+        - 8888:8888
 volumes:
   sitedata:
   redis:
+  tintoy:
