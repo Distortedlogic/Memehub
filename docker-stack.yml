@@ -89,9 +89,7 @@ services:
       restart_policy:
         condition: on-failure
   notebook:
-    build:
-        context: ./jupyter
-        dockerfile: Dockerfile
+    image: distortedlogic/notebook:latest
     container_name: notebook
     restart: on-failure
     networks:
