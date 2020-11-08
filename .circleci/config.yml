@@ -26,7 +26,7 @@ jobs:
           command: docker push distortedlogic/redis:latest
       - run:
           name: Build Notebook Docker Image
-          command: docker build -t distortedlogic/notebook:latest ./jupyter
+          command: docker build -t distortedlogic/notebook:latest ./jupyter -f Dockerfile.prod
       - run:
           name: Push Notebook Image
           command: docker push distortedlogic/notebook:latest
