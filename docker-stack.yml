@@ -68,6 +68,26 @@ services:
         delay: 10s
       restart_policy:
         condition: on-failure
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    networks:
+      - web
+      - backend
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.rediscommander.rule=Host(`rediscommander.memehub.lol`)
+        - traefik.http.routers.rediscommander.entrypoints=secure
+        - traefik.http.services.rediscommander.loadbalancer.server.port=8081
+        - traefik.http.routers.rediscommander.tls.certresolver=letsencrypt
+      replicas: 1
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
   controllers:
     image: distortedlogic/controllers:latest
     command: celery worker -B -l info -A controller.CELERY
@@ -96,6 +116,10 @@ services:
       - backend
       - web
     command: jupyter lab
+    secrets:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
     volumes:
       - ./jupyter/notebooks:/notebooks
     deploy:
