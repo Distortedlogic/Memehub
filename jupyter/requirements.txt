@@ -10,4 +10,5 @@ python_decouple == 3.3
 keras
 tensorflow == 2.2
 scikit-learn
+get-docker-secret == 1.0.1
 a
