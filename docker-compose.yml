@@ -76,6 +76,8 @@ services:
     build: ./redis
     volumes:
       - redis:/data
+    ports:
+      - 6379:6379
   redis-commander:
     restart: on-failure
     depends_on:
@@ -107,7 +109,7 @@ services:
       - sitedata
       - redis
     restart: on-failure
-    command: celery worker -B -l info -A controller.CELERY
+    command: celery -A controller.CELERY worker -B -l info
     env_file:
       - ./shared.env
     volumes:
