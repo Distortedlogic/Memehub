@@ -2,6 +2,7 @@
 /controllers
 /frontend
 /traefik
+/admin
 .env
 shared.env
 *acme
