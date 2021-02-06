@@ -1,3 +1,2 @@
-# syntax = docker/dockerfile:experimental
-FROM redislabs/redismod:latest
+FROM redisai/redisai:edge
 COPY ./redis.conf /usr/local/etc/redis/redis.conf

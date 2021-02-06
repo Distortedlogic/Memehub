@@ -5,22 +5,12 @@ services:
   #     container_name: ngrok
   #     restart: on-failure
   #     command: /bin/sh -c "ngrok authtoken ${ngrok_auth} && ngrok http backend:5000 -hostname=react.memehub.lol --log stdout"
-  # tintoy:
-  #   image: inertia/tintoy:latest
-  #   container_name: tintoy
-  #   restart: on-failure
-  #   logging:
-  #     driver: none
   frontend:
     image: distortedlogic/frontend:latest
     container_name: frontend
     restart: on-failure
     build:
       context: ./frontend
-    depends_on:
-      - backend
-      - sitedata
-      - redis
     labels:
       - traefik.enable=true
       - traefik.http.routers.frontend.rule=Host(`localhost`)
@@ -44,10 +34,6 @@ services:
     restart: on-failure
     build:
       context: ./admin
-    depends_on:
-      - backend
-      - sitedata
-      - redis
     labels:
       - traefik.enable=true
       - traefik.http.routers.admin.rule=Host(`admin.localhost`)
@@ -73,9 +59,6 @@ services:
       - traefik.http.routers.backend.rule=Host(`localhost`) && PathPrefix(`/graphql`)
       - traefik.http.routers.backend.entrypoints=unsecure
       - traefik.http.services.backend.loadbalancer.server.port=5000
-    depends_on:
-      - sitedata
-      - redis
     build:
       dockerfile: Dockerfile.dev
       context: ./backend
@@ -96,46 +79,50 @@ services:
       - ./shared.env
     ports:
       - 5432:5432
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
-    container_name: elasticsearch
-    environment:
-      - node.name=elasticsearch
-      - cluster.name=es-docker-cluster
-      - cluster.initial_master_nodes=elasticsearch
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - elasticsearch:/usr/share/elasticsearch/data
-    ports:
-      - 9200:9200
-  kibana:
-    image: docker.elastic.co/kibana/kibana:7.10.2
-    container_name: kibana
-    ports:
-      - 5601:5601
-    environment:
-      ELASTICSEARCH_URL: http://elasticsearch:9200
-      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
-    logging:
-      driver: "none"
+  # elasticsearch:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+  #   container_name: elasticsearch
+  #   environment:
+  #     - node.name=elasticsearch
+  #     - cluster.name=es-docker-cluster
+  #     - cluster.initial_master_nodes=elasticsearch
+  #     - bootstrap.memory_lock=true
+  #     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+  #   ulimits:
+  #     memlock:
+  #       soft: -1
+  #       hard: -1
+  #   volumes:
+  #     - elasticsearch:/usr/share/elasticsearch/data
+  #   ports:
+  #     - 9200:9200
+  # kibana:
+  #   image: docker.elastic.co/kibana/kibana:7.10.2
+  #   container_name: kibana
+  #   ports:
+  #     - 5601:5601
+  #   environment:
+  #     ELASTICSEARCH_URL: http://elasticsearch:9200
+  #     ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+  #   logging:
+  #     driver: "none"
+  # redis:
+  #   image: distortedlogic/redis:latest
+  #   container_name: redis
+  #   restart: on-failure
+  #   build: ./redis
+  #   volumes:
+  #     - redis:/data
+  #   ports:
+  #     - 6379:6379
   redis:
-    image: distortedlogic/redis:latest
+    image: redisai/redisai:edge
     container_name: redis
     restart: on-failure
-    build: ./redis
-    volumes:
-      - redis:/data
     ports:
       - 6379:6379
   redis-commander:
     restart: on-failure
-    depends_on:
-        - redis
     container_name: redis-commander
     image: rediscommander/redis-commander:latest
     environment:
@@ -145,23 +132,17 @@ services:
   controllers:
     image: distortedlogic/controllers:latest
     build: ./controllers
-    depends_on:
-      - sitedata
-      - redis
     container_name: controllers
     env_file:
       - ./shared.env
     restart: on-failure
-    command: gunicorn -c "python:config.gunicorn" --reload "controller:APP"
     volumes:
       - ./controllers:/app
+    ports:
+      - 8001:8000
   controller-tasks:
     image: distortedlogic/controllers:latest
     container_name: controller-tasks
-    depends_on:
-      - controllers
-      - sitedata
-      - redis
     restart: on-failure
     command: celery -A controller.CELERY worker -B -l info
     env_file:
