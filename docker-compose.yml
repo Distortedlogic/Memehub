@@ -23,6 +23,29 @@ services:
     ports:
       - 3000:3000
     stdin_open: true
+  frontendv2:
+    image: distortedlogic/frontend:edge
+    container_name: frontendv2
+    restart: on-failure
+    build:
+      context: ./frontendv2
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.frontendv2.rule=Host(`next.localhost`)
+      - traefik.http.routers.frontendv2.entrypoints=unsecure
+      - traefik.http.services.frontendv2.loadbalancer.server.port=3001
+      - traefik.http.services.frontendv2.loadbalancer.sticky.cookie=true
+      - traefik.http.services.frontendv2.loadbalancer.sticky.cookie.name=sticky_speed_cow
+      - traefik.http.services.frontendv2.loadbalancer.sticky.cookie.httpOnly=true
+      # - traefik.http.services.frontendv2.loadbalancer.sticky.cookie.domain=test.memehub.lol
+      - traefik.http.services.frontendv2.loadbalancer.sticky.cookie.secure=true
+    volumes:
+      - ./frontendv2:/app
+    environment:
+      - NODE_ENV=development
+    ports:
+      - 3001:3001
+    stdin_open: true
   admin:
     image: distortedlogic/admin:development
     container_name: admin

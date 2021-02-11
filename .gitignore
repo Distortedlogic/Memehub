@@ -1,6 +1,7 @@
 /backend
 /controllers
 /frontend
+/frontendv2
 /traefik
 /admin
 .env
