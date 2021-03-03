@@ -1,26 +1,11 @@
 version: "3.7"
 services:
-  # ngrok:
-  #     build: ./ngrok
-  #     container_name: ngrok
-  #     restart: on-failure
-  #     command: /bin/sh -c "ngrok authtoken ${ngrok_auth} && ngrok http backend:5000 -hostname=react.memehub.lol --log stdout"
-  # tintoy:
-  #   image: inertia/tintoy:latest
-  #   container_name: tintoy
-  #   restart: on-failure
-  #   logging:
-  #     driver: none
   frontend:
     image: distortedlogic/frontend:latest
     container_name: frontend
     restart: on-failure
     build:
-      context: ./frontend
-    depends_on:
-      - backend
-      - sitedata
-      - redis
+      context: ./Memehub-Frontend
     labels:
       - traefik.enable=true
       - traefik.http.routers.frontend.rule=Host(`localhost`)
@@ -38,6 +23,52 @@ services:
     ports:
       - 3000:3000
     stdin_open: true
+  frontendv2:
+    image: distortedlogic/frontend:edge
+    container_name: frontendv2
+    restart: on-failure
+    build:
+      context: ./Memehub-Frontend-v2
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.frontendv2.rule=Host(`next.localhost`)
+      - traefik.http.routers.frontendv2.entrypoints=unsecure
+      - traefik.http.services.frontendv2.loadbalancer.server.port=3001
+      - traefik.http.services.frontendv2.loadbalancer.sticky.cookie=true
+      - traefik.http.services.frontendv2.loadbalancer.sticky.cookie.name=sticky_speed_cow
+      - traefik.http.services.frontendv2.loadbalancer.sticky.cookie.httpOnly=true
+      # - traefik.http.services.frontendv2.loadbalancer.sticky.cookie.domain=test.memehub.lol
+      - traefik.http.services.frontendv2.loadbalancer.sticky.cookie.secure=true
+    volumes:
+      - ./frontendv2:/app
+    environment:
+      - NODE_ENV=development
+    ports:
+      - 3001:3001
+    stdin_open: true
+  admin:
+    image: distortedlogic/admin:development
+    container_name: admin
+    restart: on-failure
+    build:
+      context: ./Memehub-Admin
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.admin.rule=Host(`admin.localhost`)
+      - traefik.http.routers.admin.entrypoints=unsecure
+      - traefik.http.services.admin.loadbalancer.server.port=4000
+      - traefik.http.services.admin.loadbalancer.sticky.cookie=true
+      - traefik.http.services.admin.loadbalancer.sticky.cookie.name=sticky_speed_cow
+      - traefik.http.services.admin.loadbalancer.sticky.cookie.httpOnly=true
+      # - traefik.http.services.admin.loadbalancer.sticky.cookie.domain=test.memehub.lol
+      - traefik.http.services.admin.loadbalancer.sticky.cookie.secure=true
+    volumes:
+      - ./admin:/app
+    environment:
+      - NODE_ENV=development
+    ports:
+      - 4000:4000
+    stdin_open: true
   backend:
     image: distortedlogic/backend:latest
     container_name: backend
@@ -46,86 +77,14 @@ services:
       - traefik.http.routers.backend.rule=Host(`localhost`) && PathPrefix(`/graphql`)
       - traefik.http.routers.backend.entrypoints=unsecure
       - traefik.http.services.backend.loadbalancer.server.port=5000
-    depends_on:
-      - sitedata
-      - redis
     build:
       dockerfile: Dockerfile.dev
-      context: ./backend
+      context: ./Memehub-Backend
     restart: on-failure
     env_file:
-      - ./shared.env
+      - ./.env
     volumes:
       - ./backend:/app
     ports:
       - 5000:5000
-  sitedata:
-    image: postgres:13-alpine
-    container_name: sitedata
-    restart: on-failure
-    volumes:
-      - sitedata:/var/lib/postgresql/data
-    env_file:
-      - ./shared.env
-    ports:
-      - 5432:5432
-  redis:
-    image: distortedlogic/redis:latest
-    container_name: redis
-    restart: on-failure
-    build: ./redis
-    volumes:
-      - redis:/data
-  redis-commander:
-    restart: on-failure
-    depends_on:
-        - redis
-    container_name: redis-commander
-    image: rediscommander/redis-commander:latest
-    environment:
-      - REDIS_HOSTS=local:redis:6379
-    ports:
-      - 8081:8081
-  controllers:
-    image: distortedlogic/controllers:latest
-    build: ./controllers
-    depends_on:
-      - sitedata
-      - redis
-    container_name: controllers
-    env_file:
-      - ./shared.env
-    restart: on-failure
-    command: gunicorn -c "python:config.gunicorn" --reload "controller:APP"
-    volumes:
-      - ./controllers:/app
-  controller-tasks:
-    image: distortedlogic/controllers:latest
-    container_name: controller-tasks
-    depends_on:
-      - controllers
-      - sitedata
-      - redis
-    restart: on-failure
-    command: celery worker -B -l info -A controller.CELERY
-    env_file:
-      - ./shared.env
-    volumes:
-      - ./controllers:/app
-  notebook:
-    build:
-        context: ./jupyter
-        dockerfile: Dockerfile
-    container_name: notebook
-    restart: on-failure
-    command: jupyter lab
-    volumes:
-        - ./jupyter/notebooks:/notebooks
-    environment:
-      - JUPYTER_TOKEN=password
-    ports:
-        - 8888:8888
-volumes:
-  sitedata:
-  redis:
-  tintoy:
+  
