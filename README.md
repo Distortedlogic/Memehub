@@ -38,6 +38,7 @@ Navigation:
 - Admin - localhost:4000
 - Backend Graphql Playground - localhost:5000/gql
 
-Generate Fake DB Data - cd into Memehub-Backend:
+Generate Fake DB Data:
 
+    cd into Memehub-Backend
     npm run gen-db
