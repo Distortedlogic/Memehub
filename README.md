@@ -1,6 +1,8 @@
 Memehub Web Dev Setup
 
-Clone this Repo and cd into Root
+Clone this Repo
+cd into Root
+copy example.env to .env
 
 Clone Each of the following repos directly into Memehub Repo Root:
 
