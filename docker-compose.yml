@@ -5,7 +5,7 @@ services:
     container_name: frontend
     restart: on-failure
     build:
-      context: ./frontend
+      context: ./Memehub-Frontend
     labels:
       - traefik.enable=true
       - traefik.http.routers.frontend.rule=Host(`localhost`)
@@ -28,7 +28,7 @@ services:
     container_name: frontendv2
     restart: on-failure
     build:
-      context: ./frontendv2
+      context: ./Memehub-Frontend-v2
     labels:
       - traefik.enable=true
       - traefik.http.routers.frontendv2.rule=Host(`next.localhost`)
@@ -51,7 +51,7 @@ services:
     container_name: admin
     restart: on-failure
     build:
-      context: ./admin
+      context: ./Memehub-Admin
     labels:
       - traefik.enable=true
       - traefik.http.routers.admin.rule=Host(`admin.localhost`)
@@ -79,7 +79,7 @@ services:
       - traefik.http.services.backend.loadbalancer.server.port=5000
     build:
       dockerfile: Dockerfile.dev
-      context: ./backend
+      context: ./Memehub-Backend
     restart: on-failure
     env_file:
       - ./.env

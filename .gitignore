@@ -1,9 +1,6 @@
-/backend
-/controllers
-/frontend
-/frontendv2
-/traefik
-/admin
+/Memehub-Backend
+/Memehub-Controllers
+/Memehub-Frontend
+/Memehub-Frontend-v2
+/Memehub-Admin
 .env
-shared.env
-*acme
