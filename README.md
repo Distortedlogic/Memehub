@@ -17,9 +17,13 @@ cd into each repo and follow README
 
 ---
 
-## After completing each repo's README
+## Start Docker Containers
 
-Start services, such as Postgres and Redis, cd into Memehub Repo:
+After completing each repo's README
+
+cd into Memehub Repo
+
+Start services, such as Postgres and Redis:
 
     docker-compose up -f docker-compose.services.yml --build
 
