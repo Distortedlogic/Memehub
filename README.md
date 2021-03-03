@@ -13,9 +13,11 @@ Clone Each of the following repos directly into Memehub Repo Root:
 - Memehub-Frontend
 - Memehub-Frontend-v2
 
-cd into each Repo and Follow that Repo's README
+cd into each repo and follow README
 
 ---
+
+### After completing each repo's README
 
 Start services, such as Postgres and Redis, cd into Memehub Repo:
 
