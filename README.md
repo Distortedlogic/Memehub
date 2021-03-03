@@ -2,11 +2,11 @@
 
 Clone this Repo
 
-cd into Root
+cd into root
 
 copy .env.example to .env
 
-Clone Each of the following repos directly into Memehub Repo Root:
+Clone Each of the following repos directly into this repo's root:
 
 - Memehub-Admin
 - Memehub-Backend
@@ -25,13 +25,17 @@ cd into Memehub Repo
 
 ## Start Memehub services
 
-such as Postgres and Redis
+Contains images such as Postgres and Redis
 
-    docker-compose up -f docker-compose.services.yml --build
+cd into Memehub/services/
+
+    docker-compose up --build
 
 ## Start Memehub Web Containers
 
 With New terminal
+
+cd into Memehub/
 
     docker-compose up --build
 
@@ -44,19 +48,25 @@ With New terminal
 
 ## Generate Fake DB Data
 
-If only running at approx 1 iteration per second then restart.
-Sometimes when started this runs slow.
-When running fast, its about 20 iterations per second, 18mins run time
+If only running at approx 1 iteration per second then restart!
+Sometimes when started this runs slow
+When running fast, its about 20 iterations per second
+approx 18mins run time for one month data (room for improvement)
 
     cd into Memehub-Backend
     npm run gen-db
 
+## Generate Typed Urql Hooks from GQL Endpoint
+
+cd into one of the frontend repos
+run `npm run gen`
+
 ## VSCode Settings
 
-Located in the .vscode folder in settings.json, copy into vscode settings
+Located in Memehub/.vscode/settings.json, copy into vscode settings
 
 - open vscode pallete with ctrl+shift+p
-- type settings and select Open Settings (JSON)
+- type "settings" and select Open Settings (JSON)
 - copy and paste contents of settings.json into VSCode Settings JSON
 
 ## VSCode Extensions
