@@ -23,22 +23,30 @@ After completing each repo's README
 
 cd into Memehub Repo
 
-Start services, such as Postgres and Redis:
+## Start Memehub services
+
+such as Postgres and Redis
 
     docker-compose up -f docker-compose.services.yml --build
 
-With New terminal - Start Memehub Web Containers:
+## Start Memehub Web Containers
+
+With New terminal
 
     docker-compose up --build
 
-Navigation:
+## Navigation
 
 - Frontend V1 - localhost:3000
 - Frontend V2 - localhost:3001
 - Admin - localhost:4000
-- Backend Graphql Playground - localhost:5000/gql
+- Backend Graphql Playground - localhost:5000/graphql
 
-Generate Fake DB Data:
+## Generate Fake DB Data
+
+If only running at approx 1 iteration per second then restart.
+Sometimes when started this runs slow.
+When running fast, its about 20 iterations per second, 18mins run time
 
     cd into Memehub-Backend
     npm run gen-db
