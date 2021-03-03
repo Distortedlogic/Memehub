@@ -25,10 +25,10 @@ With New terminal - Start Memehub Web Containers:
 
 Navigation:
 
-- localhost:3000 - Frontend V1
-- localhost:3001 - Frontend V2
-- localhost:4000 - Admin
-- localhost:5000/gql - Backend Graphql Playground
+- Frontend V1 - localhost:3000
+- Frontend V2 - localhost:3001
+- Admin - localhost:4000
+- Backend Graphql Playground - localhost:5000/gql
 
 Generate Fake DB Data - cd into Memehub-Backend:
 
