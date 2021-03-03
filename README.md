@@ -17,7 +17,7 @@ cd into each repo and follow README
 
 ---
 
-### After completing each repo's README
+## After completing each repo's README
 
 Start services, such as Postgres and Redis, cd into Memehub Repo:
 
