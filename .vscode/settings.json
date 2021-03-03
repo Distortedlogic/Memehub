@@ -1,0 +1,50 @@
+{
+  "sqltools.useNodeRuntime": true,
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+
+  "extensions.ignoreRecommendations": false,
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "editor.detectIndentation": true,
+  "editor.linkedEditing": true,
+  "editor.suggestSelection": "first",
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  },
+  "files.associations": { "*.tsx": "typescriptreact" },
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 3600000,
+  "explorer.confirmDelete": false,
+
+  "workbench.iconTheme": "material-icon-theme",
+  "material-icon-theme.activeIconPack": "react_redux",
+  "indentRainbow.colors": ["rgba(34, 34, 34, 1)", "rgba(17, 17, 17, 1)"],
+
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2
+  },
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "material-icon-theme.files.associations": {
+    "Dockerfile.prod.test": "docker",
+    "Dockerfile.dev": "docker",
+    "memehub-compose.yml": "docker"
+},
+"workbench.editor.wrapTabs": true
+}
