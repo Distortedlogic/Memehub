@@ -17,7 +17,7 @@ services:
       # - traefik.http.services.frontend.loadbalancer.sticky.cookie.domain=test.memehub.lol
       - traefik.http.services.frontend.loadbalancer.sticky.cookie.secure=true
     volumes:
-      - ./frontend:/app
+      - ./Memehub-Frontend:/app
     environment:
       - NODE_ENV=development
     ports:
@@ -40,7 +40,7 @@ services:
       # - traefik.http.services.frontendv2.loadbalancer.sticky.cookie.domain=test.memehub.lol
       - traefik.http.services.frontendv2.loadbalancer.sticky.cookie.secure=true
     volumes:
-      - ./frontendv2:/app
+      - ./Memehub-Frontend-v2:/app
     environment:
       - NODE_ENV=development
     ports:
@@ -63,7 +63,7 @@ services:
       # - traefik.http.services.admin.loadbalancer.sticky.cookie.domain=test.memehub.lol
       - traefik.http.services.admin.loadbalancer.sticky.cookie.secure=true
     volumes:
-      - ./admin:/app
+      - ./Memehub-Admin:/app
     environment:
       - NODE_ENV=development
     ports:
@@ -84,7 +84,7 @@ services:
     env_file:
       - ./.env
     volumes:
-      - ./backend:/app
+      - ./Memehub-Backend:/app
     ports:
       - 5000:5000
   
