@@ -31,10 +31,11 @@ After completing each repo's README
 
 Contains images such as Postgres and Redis
 
-- cd into Memehub/services/
-- copy .env.example to .env
+cd into Memehub/services/
 
-  docker-compose up --build
+copy .env.example to .env
+
+docker-compose up --build
 
 ## Start Memehub Web Containers
 
