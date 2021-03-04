@@ -27,7 +27,7 @@ cd into each repo and follow README
 
 After completing each repo's README
 
-#### Start Memehub services
+## Start Memehub services
 
 Contains images such as Postgres and Redis
 
@@ -36,7 +36,7 @@ Contains images such as Postgres and Redis
 
   docker-compose up --build
 
-#### Start Memehub Web Containers
+## Start Memehub Web Containers
 
 With New terminal
 
@@ -44,7 +44,7 @@ cd into Memehub/
 
     docker-compose up --build
 
-#### Navigation
+## Navigation
 
 - Frontend V1 - localhost:3000
 - Frontend V2 - localhost:3001
@@ -53,7 +53,7 @@ cd into Memehub/
 
 ---
 
-#### Generate Fake DB Data
+## Generate Fake DB Data
 
 If only running at approx 1 iteration per second then restart!
 Sometimes when started this runs slow
@@ -63,14 +63,14 @@ approx 18mins run time for one month data (room for improvement)
     cd into Memehub-Backend
     npm run gen-db
 
-#### Generate Typed Urql Hooks from GQL Endpoint
+## Generate Typed Urql Hooks from GQL Endpoint
 
 cd into one of the frontend repos
 run `npm run gen`
 
 ---
 
-#### VSCode Settings
+## VSCode Settings
 
 Located in Memehub/.vscode/settings.json, copy into vscode settings
 
@@ -78,7 +78,7 @@ Located in Memehub/.vscode/settings.json, copy into vscode settings
 - type "settings" and select Open Settings (JSON)
 - copy and paste contents of settings.json into VSCode Settings JSON
 
-#### VSCode Extensions
+## VSCode Extensions
 
 - Apollo GraphQL
 - Auto Close Tag
