@@ -35,7 +35,7 @@ cd into Memehub/services/
 
 copy .env.example to .env
 
-docker-compose up --build
+    docker-compose up --build
 
 ## Start Memehub Web Containers
 
