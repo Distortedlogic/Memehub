@@ -49,6 +49,7 @@ services:
   backend:
     image: distortedlogic/backend:latest
     container_name: backend
+    command: npm run server-dev
     labels:
       - traefik.enable=true
       - traefik.http.routers.backend.rule=Host(`localhost`) && PathPrefix(`/graphql`)
