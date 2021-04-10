@@ -5,6 +5,7 @@ services:
     container_name: sitedata
     volumes:
       - sitedata:/var/lib/postgresql/data
+      - ./backups:/backups
     env_file:
       - ./.env
     ports:

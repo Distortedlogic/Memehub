@@ -23,29 +23,6 @@ services:
     ports:
       - 3000:3000
     stdin_open: true
-  admin:
-    image: distortedlogic/admin:development
-    container_name: admin
-    restart: on-failure
-    build:
-      context: ./Memehub-Admin
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.admin.rule=Host(`admin.localhost`)
-      - traefik.http.routers.admin.entrypoints=unsecure
-      - traefik.http.services.admin.loadbalancer.server.port=4000
-      - traefik.http.services.admin.loadbalancer.sticky.cookie=true
-      - traefik.http.services.admin.loadbalancer.sticky.cookie.name=sticky_speed_cow
-      - traefik.http.services.admin.loadbalancer.sticky.cookie.httpOnly=true
-      # - traefik.http.services.admin.loadbalancer.sticky.cookie.domain=test.memehub.lol
-      - traefik.http.services.admin.loadbalancer.sticky.cookie.secure=true
-    volumes:
-      - ./Memehub-Admin:/app
-    environment:
-      - NODE_ENV=development
-    ports:
-      - 4000:4000
-    stdin_open: true
   backend:
     image: distortedlogic/backend:latest
     container_name: backend
@@ -65,4 +42,3 @@ services:
       - ./Memehub-Backend:/app
     ports:
       - 5000:5000
-  
