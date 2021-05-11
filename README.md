@@ -14,10 +14,9 @@ Prerequites:
 
 Clone Each of the following repos directly into this repo's root:
 
-- Memehub-Admin
 - Memehub-Backend
 - Memehub-Frontend
-- Memehub-Frontend-v2
+- Memehub-Python
 
 cd into each repo and follow README
 
@@ -36,6 +35,12 @@ cd into Memehub/services/
 copy .env.example to .env
 
     docker-compose up --build
+    
+cd into Memehub/Memehub-Python/
+
+copy and fill out .env.example to .env
+
+    docker-compose up --build
 
 ## Start Memehub Web Containers
 
@@ -47,10 +52,9 @@ cd into Memehub/
 
 ## Navigation
 
-- Frontend V1 - localhost:3000
-- Frontend V2 - localhost:3001
-- Admin - localhost:4000
+- Frontend - localhost:3000
 - Backend Graphql Playground - localhost:5000/graphql
+- Jupyter Lab - localhost:8889
 
 ---
 
