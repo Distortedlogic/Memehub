@@ -18,7 +18,7 @@ services:
     # logging:
     #   driver: none
   redis:
-    image: redislabs/redisai:edge
+    image: redislabs/redisai:edge-cpu
     container_name: redis
     ports:
       - 6379:6379
